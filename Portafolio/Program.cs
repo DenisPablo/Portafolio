@@ -9,6 +9,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRepositorioCategoria, RepositorioCategoria>();
 builder.Services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
 
+builder.Services.AddTransient<IRepositorioTecnologia, RepositorioTecnologia>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -18,7 +18,9 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: rgb(34, 36, 38);
+    color: white
 }
 
 .confirmar {
@@ -27,6 +29,11 @@ body {
     border-radius: 10px;
 }
 
-#anadir {
-    
+.navbar {
+    background-color: rgb(24, 26, 27);
+}
+
+.tabla {
+    background-color: rgb(25, 27, 28);
+    border-radius: 10px;
 }

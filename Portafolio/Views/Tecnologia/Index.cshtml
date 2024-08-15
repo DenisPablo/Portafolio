@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Tecnologia>
+
+@{
+    ViewData["Title"] = "Tecnologias";
+}
+
+<h1 class="text-center">Tecnologias</h1>
+<hr />
+
+<div class="d-flex">
+    <a class="bi bi-plus-circle-fill ms-auto fs-2" asp-action="Crear" asp-controller="Tecnologia"></a>
+</div>
+
+<div class="container tabla mt-3">
+    <table class="table table-dark table-striped table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Tecnologia tecnologia in Model)
+            {
+                <tr>
+                    <td>@tecnologia.TecnologiaID</td>
+                    <td>@tecnologia.Nombre</td>
+                    <td><i class="bi bi-check-circle-fill"></i></td>
+                    <td>
+                        <a asp-action="ConfirmarEliminar" asp-controller="Tecnologia" asp-route-TecnologiaID="@tecnologia.TecnologiaID" class="btn btn-danger">Eliminar</a>
+                        <a asp-action="Editar" asp-controller="Tecnologia" asp-route-TecnologiaID="@tecnologia.TecnologiaID" class="btn btn-primary">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

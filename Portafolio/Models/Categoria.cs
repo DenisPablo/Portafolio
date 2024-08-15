@@ -2,6 +2,9 @@
 
 namespace Portafolio.Models
 {
+    /// <summary>
+    /// Esta clase representa una categoria de un proyecto de desarrollo.
+    /// </summary>
     public class Categoria
     {
         public int CategoriaID { get; set; }
@@ -10,6 +13,9 @@ namespace Portafolio.Models
         public string Nombre { get; set; }
         [Required]
         public bool Estado { get; set; }
+        /// <summary>
+        /// Cada categoria le pertenece a un usuario y solo el podra modificar y eliminar la misma.
+        /// </summary>
         [Required]
         public int UsuarioID { get; set; }
 

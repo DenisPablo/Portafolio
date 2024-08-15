@@ -11,26 +11,29 @@
     <a class="bi bi-plus-circle-fill ms-auto fs-2" asp-action="Crear" asp-controller="Categoria"></a>
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (Categoria categoria in Model)
-    {
-    <tr>
-        <td>@categoria.CategoriaID</td>
-        <td>@categoria.Nombre</td>
-        <td>@(categoria.Estado ? "Activo" : "Inactivo")</td>
-        <td><a asp-action="ConfirmarEliminar" asp-controller="Categoria" asp-route-CategoriaID="@categoria.CategoriaID" class="btn btn-danger">Eliminar</a>
-            <a asp-action="Editar" asp-controller="Categoria" asp-route-CategoriaID="@categoria.CategoriaID" class="btn btn-primary">Editar</a>
-        </td>
-    </tr>   
-    }
-    </tbody>
-</table>
+<div class="container tabla mt-3">
+    <table class="table table-dark table-striped table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Categoria categoria in Model)
+            {
+                <tr>
+                    <td>@categoria.CategoriaID</td>
+                    <td>@categoria.Nombre</td>
+                    <td><i class="bi bi-check-circle-fill"></i></td>
+                    <td>
+                        <a asp-action="ConfirmarEliminar" asp-controller="Categoria" asp-route-CategoriaID="@categoria.CategoriaID" class="btn btn-danger">Eliminar</a>
+                        <a asp-action="Editar" asp-controller="Categoria" asp-route-CategoriaID="@categoria.CategoriaID" class="btn btn-primary">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -15,6 +15,10 @@ namespace Portafolio.Servicios
         Task<Categoria> ObtenerCategoriasPorID(int CategoriaID, int UsuarioID);
     }
 
+    /// <summary>
+    /// Esta clase repositorio contiene los metodos necesarios para administrar un categoria interactuando con la base de datos.
+    /// </summary>
+
     public class RepositorioCategoria : IRepositorioCategoria
     {
         private readonly string connectionString;
@@ -24,6 +28,11 @@ namespace Portafolio.Servicios
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
+        /// <summary>
+        /// Se conecta con la base de datos y crea una nueva categoria.
+        /// </summary>
+        /// <param name="categoria">Instancia de una clase categoria con la informacion necesaria para cargarla</param>
+        /// <returns>retorna el identificador de la categoria creada</returns>
         public async Task<int> Crear(Categoria categoria)
         {
             using var connection = new SqlConnection(connectionString);
@@ -35,6 +44,11 @@ namespace Portafolio.Servicios
             return id;
         }
 
+        /// <summary>
+        /// Obtiene todas las categorias de la base datos que le pertenecen a un usuario.
+        /// </summary>
+        /// <param name="UsuarioID">Identifica al propietario de las categorias</param>
+        /// <returns>IEnumerable de las categorias obtenidas</returns>
         public async Task<IEnumerable<Categoria>> ObtenerCategorias(int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
@@ -46,6 +60,12 @@ namespace Portafolio.Servicios
             return categorias;
         }
 
+        /// <summary>
+        /// Busca una categoria en especifico identificandola con el ID.
+        /// </summary>
+        /// <param name="CategoriaID">identificador de la categoria a buscar</param>
+        /// <param name="UsuarioID">identificador del propietario de la categoria</param>
+        /// <returns></returns>
         public async Task<Categoria>ObtenerCategoriasPorID(int CategoriaID ,int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
@@ -57,6 +77,13 @@ namespace Portafolio.Servicios
             return categorias;
         }
 
+
+        /// <summary>
+        /// Marca una categoria como deshabilitada (borrado logico).
+        /// </summary>
+        /// <param name="CategoriaID">identifica la categoria a deshabilitar</param>
+        /// <param name="UsuarioID">identifica al propietario de la categoria</param>
+        /// <returns></returns>
         public async Task EliminarCategoria(int CategoriaID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
@@ -67,7 +94,11 @@ namespace Portafolio.Servicios
             await connection.ExecuteAsync(query, new { CategoriaID, UsuarioID });
         }
 
-
+        /// <summary>
+        /// Permite realizar ediciones sobre las categorias ya existentes.
+        /// </summary>
+        /// <param name="categoria">instancia de una categoria con la nueva informacion a cargar</param>
+        /// <returns></returns>
         public async Task EditarCategoria(Categoria categoria) 
         {
             using var connection = new SqlConnection(connectionString);
