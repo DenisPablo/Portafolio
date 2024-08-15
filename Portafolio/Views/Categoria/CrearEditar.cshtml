@@ -1,0 +1,19 @@
+﻿@model Categoria
+
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+    @if (Model.CategoriaID == 0)
+    {
+        <h5>Las Categorias permiten agrupar proyectos segun el area donde se enfocan</h5>
+    }
+
+<partial name="_Partials/_FormularioCrearEditar" model="Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="/js/ConfirmarEnvio.js" asp-append-version="true"></script>
+}
