@@ -9,6 +9,7 @@ namespace Portafolio.Servicios
         Task<int> Crear(Tecnologia tecnologia);
         Task EditarTecnologia(Tecnologia tecnologia);
         Task EliminarTecnologia(int CategoriaID, int UsuarioID);
+        Task<bool> ExisteTecnologia(string nombre, int UsuarioID);
         Task<IEnumerable<Tecnologia>> ObtenerTecnologias(int UsuarioID);
         Task<Tecnologia> ObtenerTecnologiasPorID(int TecnologiaID, int UsuarioID);
     }
@@ -81,15 +82,15 @@ namespace Portafolio.Servicios
         /// <param name="CategoriaID">identificador de la categoria</param>
         /// <param name="UsuarioID">indentificador del usuario propietario</param>
         /// <returns></returns>
-        public async Task EliminarTecnologia(int CategoriaID, int UsuarioID)
+        public async Task EliminarTecnologia(int TecnologiaID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 
             string query = @"UPDATE Tecnologia
                             SET Estado = 0
-                            WHERE CategoriaID = @CategoriaID AND UsuarioID = UsuarioID;";
+                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = UsuarioID;";
 
-            await connection.ExecuteAsync(query, new { CategoriaID, UsuarioID });
+            await connection.ExecuteAsync(query, new { TecnologiaID, UsuarioID });
         }
 
 
@@ -102,11 +103,22 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"UPDATE Nombre = @Nombre
+            string query = @"UPDATE Tecnologia 
+                            SET Nombre = @Nombre
                             WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID;";
 
             await connection.ExecuteAsync(query, tecnologia);  
         }
 
+        public async Task<bool> ExisteTecnologia(string nombre, int UsuarioID)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"SELECT 1 FROM Tecnologia WHERE Nombre = @Nombre AND UsuarioID = @UsuarioID;";
+
+            var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { nombre, UsuarioID });
+
+            return existe == 1;
+        }
     }
 }

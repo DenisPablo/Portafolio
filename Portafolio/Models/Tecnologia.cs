@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portafolio.Models
 {
@@ -11,6 +12,7 @@ namespace Portafolio.Models
 
         [Required]
         [StringLength(20, MinimumLength = 3, ErrorMessage = "El {0} debe tener como minimo {2} y maximo {1} caracteres")]
+        [Remote(action: "VerificarExistenciaTecnologia", controller:"Tecnologia")]
         public string Nombre { get; set; }
 
         [Required]

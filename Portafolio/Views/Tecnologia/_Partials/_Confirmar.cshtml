@@ -1,14 +1,14 @@
-﻿@model Categoria
+﻿@model Tecnologia
 @{
     ViewData["Title"] = "Confirmar Eliminar";
 }
 
 
 <h1>Confirmar Eliminar</h1>
-<p>¿Estas seguro de querer eliminar la categoria <strong>@Model.Nombre</strong>?</p>
+<p>¿Estas seguro de querer eliminar la tecnologia <strong>@Model.Nombre</strong>?</p>
 
 <form asp-action="Eliminar" method="post">
-    <input type="hidden" asp-for="CategoriaID" />
+    <input type="hidden" asp-for="TecnologiaID" />
     <input type="hidden" asp-for="Nombre" />
     <button type="submit" class="btn btn-danger">Eliminar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>

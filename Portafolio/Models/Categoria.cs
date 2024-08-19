@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portafolio.Models
 {
@@ -10,6 +11,7 @@ namespace Portafolio.Models
         public int CategoriaID { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [StringLength(200, MinimumLength = 3, ErrorMessage = "El {0} debe tener como minimo {2} y maximo {1} caracteres")]
+        [Remote(action: "VerificarExistenciaCategoria", controller:"Categoria")]
         public string Nombre { get; set; }
         [Required]
         public bool Estado { get; set; }

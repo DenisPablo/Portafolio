@@ -11,6 +11,7 @@ namespace Portafolio.Servicios
         Task<int> Crear(Categoria categoria);
         Task EditarCategoria(Categoria categoria);
         Task EliminarCategoria(int CategoriaID, int UsuarioID);
+        Task<bool> ExisteCategoria(string nombre, int UsuarioID);
         Task<IEnumerable<Categoria>> ObtenerCategorias(int id);
         Task<Categoria> ObtenerCategoriasPorID(int CategoriaID, int UsuarioID);
     }
@@ -108,6 +109,17 @@ namespace Portafolio.Servicios
                             WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID;";
 
             await connection.ExecuteAsync(query, categoria);
+        }
+
+        public async Task<bool> ExisteCategoria(string nombre, int UsuarioID) 
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"SELECT 1 FROM Categoria WHERE Nombre = @Nombre AND UsuarioID = @UsuarioID;";
+
+            var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { nombre, UsuarioID });
+
+            return existe == 1;
         }
     }
 }

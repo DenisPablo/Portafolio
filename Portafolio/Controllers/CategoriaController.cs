@@ -32,9 +32,6 @@ namespace Portafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear(Categoria categoria)
         {
-            /*
-                Valida los datos en el modelo conforme la reglas establecidas
-            */
 
             if (!ModelState.IsValid)
             {
@@ -58,14 +55,22 @@ namespace Portafolio.Controllers
                 return View("Error404");
             }
 
-            ViewBag.Accion = "eliminar";
             return View("_Partials/_Confirmar", categoria);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Eliminar(int CategoriaID) 
         {
             int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            Categoria categoria = await repositorioCategoria.ObtenerCategoriasPorID(CategoriaID, UsuarioID);
+
+            if (categoria == null) 
+            {
+                return View("Error404");
+            }
+
             await repositorioCategoria.EliminarCategoria(CategoriaID, UsuarioID);
+
 
             return RedirectToAction("Index");
         }
@@ -83,15 +88,36 @@ namespace Portafolio.Controllers
             return View("CrearEditar",categoria);
         }
 
+       
         [HttpPost]
         public async Task<IActionResult> Editar(Categoria categoria) 
         {
             int UsuarioID = await repositorioUsuario.ObtenerUsuario();
             categoria.UsuarioID = UsuarioID;
 
+            if (!ModelState.IsValid)
+            {
+                return View("Error404");
+            }
+
             await repositorioCategoria.EditarCategoria(categoria);
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> VerificarExistenciaCategoria(string nombre) 
+        {
+            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var yaExisteCategoria = await repositorioCategoria.ExisteCategoria(nombre, UsuarioID);
+
+            if (yaExisteCategoria)
+            {
+                return Json($"El nombre ya existe");
+            }
+
+            return Json(true);
+        }
+    
     }
 }

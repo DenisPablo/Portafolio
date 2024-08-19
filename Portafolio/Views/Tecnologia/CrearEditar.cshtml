@@ -1,0 +1,18 @@
+﻿@model Tecnologia
+
+@{
+    ViewData["Title"] = "Crear Tecnologia";
+}
+
+<h1>Crear Tecnologia</h1>
+@if (Model.TecnologiaID == 0)
+{
+    <p>Una tecnologia es una herramienta para el desarrollo de software o para hacking.</p>
+}
+
+<partial name="_Partials/_FormularioCrearEditar" model="Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="/js/ConfirmarEnvio.js" asp-append-version="true"></script>
+}

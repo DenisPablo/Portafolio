@@ -1,0 +1,33 @@
+﻿@model Tecnologia
+
+
+<!-- Esto tiene una validacion de CRSF automatica -->
+<form asp-controller="Tecnologia" asp-action="@(Model.TecnologiaID == 0 ? "Crear" : "Editar")" method="post">
+    <!--
+        asp-for: Permite vincular los campos del modelos con los campos del formulario
+
+        asp-validation-for permite mostrar el mensaje de error vinculado al campo:
+        NOTA: Para que funcionen correctamente deben incluirse los script de validacion en Frot,
+        en este momento se encuetran agregados en _Layout
+    -->
+    <input type="hidden" asp-for="TecnologiaID"/>
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input type="text" asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    
+    <div id="guardar" class="m-2 ms-auto">
+        <button onclick="confirmar()" type="button" class="btn btn-primary">
+            @(Model.TecnologiaID == 0 ? "Crear" : "Guardar Cambios")
+        </button>
+        <a asp-action="Index" asp-controller="Tecnologia" class="btn btn-secondary">Cancelar</a>
+    </div>
+    
+    <div id="confirmar" class="mb-3 confirmar alert-danger text-center">
+        <p>¿Esta seguro que desea realizar esta accion?</p>
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+        <a asp-action="Index" asp-controller="Tecnologia" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
