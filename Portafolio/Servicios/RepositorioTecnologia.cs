@@ -14,6 +14,9 @@ namespace Portafolio.Servicios
         Task<Tecnologia> ObtenerTecnologiasPorID(int TecnologiaID, int UsuarioID);
     }
 
+    /// <summary>
+    /// Esta clase contiene los metodos necesarios para administrar una tecnologia en la base de datos
+    /// </summary>
     public class RepositorioTecnologia : IRepositorioTecnologia
     {
 
@@ -33,7 +36,7 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
 
             string query = @"INSERT INTO Tecnologia (Nombre, UsuarioID, Estado) 
-                             VALUES (@Nombre, @UsuarioID, @Estado);
+                             VALUES (@Nombre, @UsuarioID, 1);
                              SELECT SCOPE_IDENTITY();";
 
             var id = await connection.QuerySingleAsync<int>(query, tecnologia);
@@ -70,7 +73,7 @@ namespace Portafolio.Servicios
 
             string query = @"SELECT TecnologiaID, Nombre, UsuarioID, Estado 
                             FROM Tecnologia 
-                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID;";
+                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
             var tecnologia = await connection.QueryFirstOrDefaultAsync<Tecnologia>(query, new { TecnologiaID, UsuarioID });
             return tecnologia;
@@ -88,7 +91,7 @@ namespace Portafolio.Servicios
 
             string query = @"UPDATE Tecnologia
                             SET Estado = 0
-                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = UsuarioID;";
+                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = UsuarioID AND Estado = 1;";
 
             await connection.ExecuteAsync(query, new { TecnologiaID, UsuarioID });
         }
@@ -105,11 +108,17 @@ namespace Portafolio.Servicios
 
             string query = @"UPDATE Tecnologia 
                             SET Nombre = @Nombre
-                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID;";
+                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
             await connection.ExecuteAsync(query, tecnologia);  
         }
 
+        /// <summary>
+        /// Verifica si una tecnología con un nombre específico ya existe para un usuario.
+        /// </summary>
+        /// <param name="nombre">Nombre de la tecnología a buscar.</param>
+        /// <param name="UsuarioID">Identificador del propietario de la tecnología.</param>
+        /// <returns>Un valor booleano que indica si existe o no la tecnología.</returns>
         public async Task<bool> ExisteTecnologia(string nombre, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);

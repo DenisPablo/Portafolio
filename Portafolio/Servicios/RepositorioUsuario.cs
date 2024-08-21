@@ -4,6 +4,10 @@
     {
         Task<int> ObtenerUsuario();
     }
+
+    /// <summary>
+    /// Esta clase contiene los metodos necesarios para administrar los usuarios en la base de datos.
+    /// </summary>
     public class RepositorioUsuario : IRepositorioUsuario
     {
 

@@ -10,6 +10,7 @@ builder.Services.AddTransient<IRepositorioCategoria, RepositorioCategoria>();
 builder.Services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
 
 builder.Services.AddTransient<IRepositorioTecnologia, RepositorioTecnologia>();
+builder.Services.AddTransient<IRepositorioProyecto, RepositorioProyecto>();
 
 var app = builder.Build();
 

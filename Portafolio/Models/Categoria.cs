@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Portafolio.Models
 {
     /// <summary>
-    /// Esta clase representa una categoria de un proyecto de desarrollo.
+    /// Esta clase representa una categoria de un proyecto de desarrollo o hacking.
     /// </summary>
     public class Categoria
     {

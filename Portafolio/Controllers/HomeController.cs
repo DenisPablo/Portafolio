@@ -4,23 +4,12 @@ using System.Diagnostics;
 
 namespace Portafolio.Controllers
 {
+    /// <summary>
+    /// Se encarga de realizar la primera presentacion de la pagina.
+    /// </summary>
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+   
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
     }
 }

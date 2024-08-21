@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Proyecto>
+
+@{
+    ViewData["Title"] = "Proyectos";
+}
+
+<h1 class="text-center">Proyectos</h1>
+<hr>
+
+<div class="d-flex">
+    <a class="bi bi-plus-circle-fill ms-auto fs-2" asp-action="Crear" asp-controller="Categoria"></a>
+</div>
+
+<div class="container tabla mt-3">
+    <table class="table table-dark table-striped table-hover text">
+        <thead>
+            <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">Titulo</th>
+                <th class="text-center">Fecha Publicacion</th>
+                <th class="text-center">Antiguedad</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Proyecto proyecto in Model)
+            {
+                <tr>
+                    <td class="text-center">@proyecto.ProyectoID</td>
+                    <td class="text-center">@proyecto.Titulo</td>
+                    <td class="text-center">@proyecto.FechaPubli.ToString("yyyy-MM-dd")</td>
+                    <td class ="text-center">@proyecto.Antiguedad Meses</td>
+                    <td class="text-center"><i class="bi bi-check-circle-fill"></i></td>
+                    <td class="text-center">
+                        <a asp-action="ConfirmarEliminar" asp-controller="Proyecto" asp-route-ProyectoID="@proyecto.ProyectoID" class="btn btn-danger">Eliminar</a>
+                        <a asp-action="Editar" asp-controller="Proyecto" asp-route-ProyectoID="@proyecto.ProyectoID" class="btn btn-primary">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

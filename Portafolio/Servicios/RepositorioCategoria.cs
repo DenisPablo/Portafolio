@@ -38,7 +38,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             string query = @"INSERT INTO Categoria (Nombre,Estado,UsuarioID) 
-                            VALUES (@Nombre, @Estado, @UsuarioID);
+                            VALUES (@Nombre, 1, @UsuarioID);
                             SELECT SCOPE_IDENTITY();";
 
             var id = await connection.QuerySingleAsync<int>(query, categoria);
@@ -74,8 +74,8 @@ namespace Portafolio.Servicios
                              FROM Categoria 
                              WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID AND Estado = 1";
 
-            var categorias = await connection.QueryFirstOrDefaultAsync<Categoria>(query, new { CategoriaID, UsuarioID });
-            return categorias;
+            var categoria = await connection.QueryFirstOrDefaultAsync<Categoria>(query, new { CategoriaID, UsuarioID });
+            return categoria;
         }
 
 
@@ -90,7 +90,7 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
             string query = @"UPDATE Categoria 
                             SET Estado = 0 
-                            WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID;";
+                            WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
             await connection.ExecuteAsync(query, new { CategoriaID, UsuarioID });
         }
@@ -106,16 +106,24 @@ namespace Portafolio.Servicios
 
             string query = @"UPDATE Categoria 
                             SET Nombre = @Nombre 
-                            WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID;";
+                            WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
             await connection.ExecuteAsync(query, categoria);
         }
 
+        /// <summary>
+        /// Valida si existe una categoria buscado por nombre, interactua con una validacion en el frontend [Remote]
+        /// </summary>
+        /// <param name="nombre">Nombre de la categoria</param>
+        /// <param name="UsuarioID">Identificador del Usuario</param>
+        /// <returns>bool en true si encuentra coincidencias</returns>
         public async Task<bool> ExisteCategoria(string nombre, int UsuarioID) 
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT 1 FROM Categoria WHERE Nombre = @Nombre AND UsuarioID = @UsuarioID;";
+            string query = @"SELECT 1 
+F                          FROM Categoria
+                           WHERE Nombre = @Nombre AND UsuarioID = @UsuarioID;";
 
             var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { nombre, UsuarioID });
 
