@@ -1,0 +1,19 @@
+﻿@model Proyecto
+
+@{
+    ViewData["Title"] = Model.ProyectoID == 0 ? "Crear Proyecto" : "Editar Proyecto";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+    @if (Model.ProyectoID == 0)
+    {
+        <h5>Un Proyecto intenta brindar una solución a un problema de la vida real.</h5>
+    }
+
+<partial name="_Partials/_FormularioCrearEditar" model="Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="/js/ConfirmarEnvio.js" asp-append-version="true"></script>
+}

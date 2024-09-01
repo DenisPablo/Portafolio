@@ -34,6 +34,7 @@ namespace Portafolio.Controllers
         /// Muestra la vista para crear una nueva categoría.
         /// </summary>
         /// <returns>Una vista con un modelo de categoría vacío.</returns>
+        [HttpGet]
         public IActionResult Crear()
         {
             Categoria categoria = new Categoria();

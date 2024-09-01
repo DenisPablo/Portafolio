@@ -11,11 +11,15 @@ namespace Portafolio.Controllers
     {
         private readonly IRepositorioProyecto repositorioProyecto;
         private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly ICloudinaryService cloudinaryService;
+        private readonly IRepositorioImagenProyecto repositorioImagenProyecto;
 
-        public ProyectoController(IRepositorioProyecto repositorioProyecto, IRepositorioUsuario repositorioUsuario)
+        public ProyectoController(IRepositorioProyecto repositorioProyecto, IRepositorioUsuario repositorioUsuario, ICloudinaryService cloudinaryService, IRepositorioImagenProyecto repositorioImagenProyecto)
         {
             this.repositorioProyecto = repositorioProyecto;
             this.repositorioUsuario = repositorioUsuario;
+            this.cloudinaryService = cloudinaryService;
+            this.repositorioImagenProyecto = repositorioImagenProyecto;
         }
 
         /// <summary>
@@ -27,6 +31,29 @@ namespace Portafolio.Controllers
             int UsuarioID = await repositorioUsuario.ObtenerUsuario();
             IEnumerable<Proyecto> proyectos = await repositorioProyecto.ObtenerProyectos(UsuarioID);
             return View(proyectos);
+        }
+
+        public IActionResult Crear() 
+        {
+            Proyecto proyecto = new Proyecto();
+            return View("CrearEditar", proyecto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear(Proyecto proyecto, IEnumerable<IFormFile> imagenes) 
+        {
+            if (!ModelState.IsValid) 
+            {
+                return View("CrearEditar", proyecto);
+            }
+
+            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            proyecto.UsuarioID = UsuarioID;
+
+            if (imagenes != null && imagenes.Any())
+            {
+            
+            }
         }
     }
 }

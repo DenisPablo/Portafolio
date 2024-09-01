@@ -12,6 +12,9 @@ builder.Services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
 builder.Services.AddTransient<IRepositorioTecnologia, RepositorioTecnologia>();
 builder.Services.AddTransient<IRepositorioProyecto, RepositorioProyecto>();
 
+builder.Services.AddTransient<IRepositorioImagenProyecto, RepositorioImagenProyecto>();
+builder.Services.AddTransient<ICloudinaryService, CloudinaryService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,7 +1,7 @@
 ﻿@model Categoria
 
 @{
-    ViewData["Title"] = ViewBag.Title;
+    ViewData["Title"] = Model.CategoriaID == 0 ? "Crear Catergoria" : "Editar Categoria";
 }
 
 <h1>@ViewData["Title"]</h1>
