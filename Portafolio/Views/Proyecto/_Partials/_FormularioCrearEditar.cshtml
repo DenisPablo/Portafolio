@@ -2,7 +2,7 @@
 
 
 <!-- Esto tiene una validacion de CRSF automatica -->
-<form asp-controller="Proyecto" asp-action="@(Model.ProyectoID == 0 ? "Crear" : "Editar")" method="post">
+<form asp-controller="Proyecto" asp-action="@(Model.ProyectoID == 0 ? "Crear" : "Editar")" method="post" enctype="multipart/form-data">
     <!--
         asp-for: Permite vincular los campos del modelos con los campos del formulario
 
@@ -18,6 +18,13 @@
     </div>
 
     <div class="mb-3">
+        <label asp-for="CategoriaID"></label>
+        <select asp-for="CategoriaID" asp-items="@(ViewBag.Categorias)" class="form-control">
+            <option value="">Seleccione una categoria</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
         <label asp-for="Descripcion" class="form-label"></label>
         <textarea id="Descripcion" name="Descripcion" class="form-control"></textarea>
     </div>
@@ -25,6 +32,19 @@
     <div class="mb-3">
         <label for="imagenes" class="form-label">Subir Imágenes</label>
         <input type="file" id="imagenes" name="imagenes" class="form-control" multiple />
+    </div>
+
+    <div class="mb-3">
+        <label>Seleccionar Tecnologias:</label>
+        <div class="checkbox-group mt-3">
+            @foreach (var tecnologia in ViewBag.Tecnologias)
+            {
+                <div class="form-check col-2">
+                    <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas" value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID" />
+                    <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
+                </div>
+            }
+        </div>
     </div>
 
     <div id="guardar" class="m-2 ms-auto">

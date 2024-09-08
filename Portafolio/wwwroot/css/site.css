@@ -37,3 +37,58 @@ body {
     background-color: rgb(25, 27, 28);
     border-radius: 10px;
 }
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.custom-checkbox {
+    position: relative;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    appearance: none;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.custom-checkbox:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.custom-checkbox:checked::after {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    clip-path: polygon(0 0, 100% 100%, 100% 0);
+}
+
+.custom-label {
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: color 0.3s;
+}
+
+.custom-label:hover {
+    color: #007bff;
+}

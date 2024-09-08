@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace Portafolio.Servicios
 {
 
-    interface IRepositorioImagenProyecto
+   public interface IRepositorioImagenProyecto
     {
         Task<int> Crear(ImagenProyecto imagenProyecto);
         Task EliminarImagenProyecto(int ImagenID, int UsuarioID);

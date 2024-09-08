@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Portafolio.Servicios
 {
-    interface ICloudinaryService
+    public interface ICloudinaryService
     {
         Task<DeletionResult> ElimanarImagenAsync(string publicID);
         Task<ImageUploadResult> SubirImagenAsyc(Stream imageStream, string nombre);
@@ -56,6 +56,12 @@ namespace Portafolio.Servicios
             return results;
         }
 
+        /// <summary>
+        /// Borra una imagen del servicio de Cloudinary
+        /// </summary>
+        /// <param name="publicID">ID publico de la imagen</param>
+        /// <returns>Una tarea que representa el resultado de la operacion de carga. El resultado contiene detalles sobre la imagen borrada</returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<DeletionResult> ElimanarImagenAsync(string publicID) 
         {
             if (!string.IsNullOrWhiteSpace(publicID)) 

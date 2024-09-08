@@ -17,16 +17,13 @@ namespace Portafolio.Models
         /// <summary>
         /// Cada proyecto le pertenece a un usuario y solo el puede modificar y eliminar la misma.
         /// </summary>
-        /// 
         [Required]
         public int UsuarioID { get; set; }
-        [Required]
         public DateTime FechaPubli {  get; set; }
-
-        /// <summary>
-        /// Es la antiguedad del proyecto en meses o años que tiene un proyecto y es calculada por la base de datos.
-        /// </summary>
         [Required]
+        [Display(Name = "Categoria")]
+        public int CategoriaID { get; set; }
+
         public int Antiguedad { get; set; }
     }
 }

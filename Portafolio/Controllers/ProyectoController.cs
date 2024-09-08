@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Portafolio.Models;
 using Portafolio.Servicios;
 
@@ -13,13 +14,20 @@ namespace Portafolio.Controllers
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly ICloudinaryService cloudinaryService;
         private readonly IRepositorioImagenProyecto repositorioImagenProyecto;
+        private readonly IProyectoUtilidades proyectoUtilidades;
+        private readonly IRepositorioCategoria repositorioCategoria;
+        private readonly IRepositorioTecnologia repositorioTecnologia;
 
-        public ProyectoController(IRepositorioProyecto repositorioProyecto, IRepositorioUsuario repositorioUsuario, ICloudinaryService cloudinaryService, IRepositorioImagenProyecto repositorioImagenProyecto)
+        public ProyectoController(IRepositorioProyecto repositorioProyecto, IRepositorioUsuario repositorioUsuario, ICloudinaryService cloudinaryService,
+            IRepositorioImagenProyecto repositorioImagenProyecto, IProyectoUtilidades proyectoUtilidades, IRepositorioCategoria repositorioCategoria, IRepositorioTecnologia repositorioTecnologia)
         {
             this.repositorioProyecto = repositorioProyecto;
             this.repositorioUsuario = repositorioUsuario;
             this.cloudinaryService = cloudinaryService;
             this.repositorioImagenProyecto = repositorioImagenProyecto;
+            this.proyectoUtilidades = proyectoUtilidades;
+            this.repositorioCategoria = repositorioCategoria;
+            this.repositorioTecnologia = repositorioTecnologia;
         }
 
         /// <summary>
@@ -33,27 +41,34 @@ namespace Portafolio.Controllers
             return View(proyectos);
         }
 
-        public IActionResult Crear() 
+        public async Task<IActionResult> Crear() 
         {
             Proyecto proyecto = new Proyecto();
-            return View("CrearEditar", proyecto);
+            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var categorias = await repositorioCategoria.ObtenerCategorias(UsuarioID);
+            var tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
+
+            ViewBag.Tecnologias = tecnologias;
+            ViewBag.Categorias = new SelectList(categorias, "CategoriaID", "Nombre");
+            return View("CrearEditar", proyecto);   
         }
 
+        
         [HttpPost]
-        public async Task<IActionResult> Crear(Proyecto proyecto, IEnumerable<IFormFile> imagenes) 
+        public async Task<IActionResult> Crear(Proyecto proyecto, IEnumerable<IFormFile> imagenes, int[] tecnologiasSeleccionadas) 
         {
+
             if (!ModelState.IsValid) 
             {
-                return View("CrearEditar", proyecto);
+              return View(proyecto);
             }
 
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
-            proyecto.UsuarioID = UsuarioID;
+            proyecto.UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            proyecto.Descripcion = proyectoUtilidades.LimpiarInputHTML(proyecto.Descripcion);
+            proyecto.FechaPubli = new DateTime();
 
-            if (imagenes != null && imagenes.Any())
-            {
-            
-            }
+            return View();
         }
+        
     }
 }
