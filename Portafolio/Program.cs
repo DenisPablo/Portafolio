@@ -16,6 +16,7 @@ builder.Services.AddTransient<IRepositorioImagenProyecto, RepositorioImagenProye
 builder.Services.AddTransient<ICloudinaryService, CloudinaryService>();
 
 builder.Services.AddTransient<IProyectoUtilidades, ProyectoUtilidades>();
+builder.Services.AddTransient<IRepositorioTecnologiaUsada, RepositorioTecnologiaUsada>();
 
 var app = builder.Build();
 
@@ -39,23 +40,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+
 app.Run();
-
-app.Use(async (context, next) =>
-{
-    try
-    {
-        await next(); // Procesa la solicitud
-    }
-    catch (Exception ex)
-    {
-        // Aquí puedes registrar la excepción
-        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Se ha producido una excepción.");
-
-        // Puedes devolver una respuesta personalizada
-        context.Response.StatusCode = 500;
-        await context.Response.WriteAsync("Ocurrió un error inesperado en el servidor.");
-    }
-});
 

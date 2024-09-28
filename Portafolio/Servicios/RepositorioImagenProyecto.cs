@@ -23,8 +23,8 @@ namespace Portafolio.Servicios
         public async Task<int> Crear(ImagenProyecto imagenProyecto)
         {
             using var connection = new SqlConnection(connectionString);
-            string query = @"INSERT INTO ImagenProyecto (URL,Estado, Orden, UsuarioID) 
-                            VALUES (@URL, 1, @Orden, @UsuarioID);
+            string query = @"INSERT INTO ImagenProyecto (URL,Estado, Orden, PublicID, ProyectoID, UsuarioID) 
+                            VALUES (@URL, 1, @Orden, @PublicID , @ProyectoID, @UsuarioID);
                             SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             var id = await connection.QuerySingleAsync<int>(query, imagenProyecto);

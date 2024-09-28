@@ -9,7 +9,7 @@ namespace Portafolio.Servicios
         Task<int> Crear(Proyecto proyecto);
         Task EditarProyecto(Proyecto proyecto);
         Task EliminarProyecto(int ProyectoID, int UsuarioID);
-        Task<bool> ExisteProyecto(string nombre, int UsuarioID);
+        Task<bool> ExisteProyecto(string Titulo, int UsuarioID);
         Task<Proyecto> ObtenerProyectoPorID(int ProyectoID, int UsuarioID);
         Task<IEnumerable<Proyecto>> ObtenerProyectos(int usuarioID);
     }
@@ -36,13 +36,14 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"INSERT INTO Proyecto (Titulo, Descripcion, Estado, UsuarioID) 
-                            VALUES (@Titulo, @Descripcion, 1, @UsuarioID);
-                            SELECT SCOPE_IDENTITY();";
+            string query = @"INSERT INTO Proyecto (Titulo, Descripcion, FechaPubli, Estado, UsuarioID) 
+                     VALUES (@Titulo, @Descripcion, @FechaPubli, 1, @UsuarioID);
+                     SELECT CAST(SCOPE_IDENTITY() AS INT);"; 
 
-            var id = await connection.QuerySingleAsync(query, proyecto);
+            var id = await connection.QuerySingleAsync<int>(query, proyecto);
             return id;
         }
+
 
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace Portafolio.Servicios
         /// <param name="nombre">Nombre del proyecto a buscar.</param>
         /// <param name="UsuarioID">Identificador del propietario del proyecto.</param>
         /// <returns>Un valor booleano que indica si existe o no el proyecto.</returns>
-        public async Task<bool> ExisteProyecto(string nombre, int UsuarioID) 
+        public async Task<bool> ExisteProyecto(string Titulo, int UsuarioID) 
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -129,7 +130,7 @@ namespace Portafolio.Servicios
                             FROM Proyecto 
                             WHERE Titulo = @Titulo AND UsuarioID = @UsuarioID";
 
-            var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { nombre, UsuarioID });
+            var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { Titulo, UsuarioID });
 
             return existe == 1;
         }

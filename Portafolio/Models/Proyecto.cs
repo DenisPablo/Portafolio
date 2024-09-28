@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portafolio.Models
 {
@@ -9,6 +10,7 @@ namespace Portafolio.Models
     {
         public int ProyectoID { get; set; }
         [Required]
+        [Remote(action: "VerificarExistenciaProyecto", controller: "Proyecto")]
         [StringLength(50, ErrorMessage ="El titulo es demasiado largo")]
         public string Titulo { get; set; }
         [Required]
