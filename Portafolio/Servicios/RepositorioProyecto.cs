@@ -36,8 +36,8 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"INSERT INTO Proyecto (Titulo, Descripcion, FechaPubli, Estado, UsuarioID) 
-                     VALUES (@Titulo, @Descripcion, @FechaPubli, 1, @UsuarioID);
+            string query = @"INSERT INTO Proyecto (Titulo, Descripcion, FechaPubli, CategoriaID, Estado, UsuarioID) 
+                     VALUES (@Titulo, @Descripcion, @FechaPubli,@CategoriaID, 1, @UsuarioID);
                      SELECT CAST(SCOPE_IDENTITY() AS INT);"; 
 
             var id = await connection.QuerySingleAsync<int>(query, proyecto);
@@ -67,18 +67,18 @@ namespace Portafolio.Servicios
         /// <summary>
         /// Busca un proyecto en específico por su ID.
         /// </summary>
-        /// <param name="CategoriaID">Identificador del proyecto a buscar.</param>
+        /// <param name="ProyectoID">Identificador del proyecto a buscar.</param>
         /// <param name="UsuarioID">Identificador del propietario del proyecto.</param>
         /// <returns>El proyecto encontrado o null si no existe.</returns>
         public async Task<Proyecto> ObtenerProyectoPorID(int ProyectoID, int UsuarioID) 
         {
             using var connecion = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado 
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, CategoriaID, UsuarioID, Estado 
                             FROM Proyecto 
                             WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
-            var proyecto = await connecion.QueryFirstOrDefaultAsync(query, new { ProyectoID, UsuarioID });
+            var proyecto = await connecion.QueryFirstOrDefaultAsync<Proyecto>(query, new { ProyectoID, UsuarioID });
             return proyecto;
         }
 

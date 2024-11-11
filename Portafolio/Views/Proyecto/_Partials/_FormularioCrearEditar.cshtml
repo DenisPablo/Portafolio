@@ -26,7 +26,7 @@
 
     <div class="mb-3">
         <label asp-for="Descripcion" class="form-label"></label>
-        <textarea id="Descripcion" name="Descripcion" class="form-control"></textarea>
+        <textarea id="Descripcion" name="Descripcion" class="form-control">@Model.Descripcion</textarea>
     </div>
 
     <div class="mb-3">
@@ -39,13 +39,40 @@
         <div class="checkbox-group mt-3">
             @foreach (var tecnologia in ViewBag.Tecnologias)
             {
-                <div class="form-check col-2">
-                    <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas" value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID" />
-                    <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
-                </div>
+                @if (ViewBag.TecnologiasUsadas.Contains(tecnologia))
+                {
+                    <div class="form-check col-2">
+                        <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas" value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID" checked/>
+                        <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
+                    </div>
+                }
+                else
+                {    
+                    <div class="form-check col-2">
+                        <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas" value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID" />
+                        <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
+                    </div>
+                }
             }
         </div>
     </div>
+
+    @if (Model.ProyectoID != 0)
+    {
+        <div class="row">
+            @foreach (var imagen in ViewBag.Imagenes)
+            {
+                <div class="col-md-3 mb-3">
+                    <!-- Mostrar imagen con un contenedor Bootstrap -->
+                    <div class="card">
+                        <div class="form-check col-2">
+                            <img src="@imagen.URL" class="card-img-top" alt="Imagen del proyecto" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 
     <div id="guardar" class="m-2 ms-auto">
         <button onclick="confirmar()" type="button" class="btn btn-primary">

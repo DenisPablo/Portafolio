@@ -52,6 +52,7 @@ namespace Portafolio.Controllers
                 var tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
 
                 ViewBag.Tecnologias = tecnologias;
+                ViewBag.TecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, UsuarioID);
                 ViewBag.Categorias = new SelectList(categorias, "CategoriaID", "Nombre");
                 return View("CrearEditar", proyecto);
         }
@@ -102,6 +103,53 @@ namespace Portafolio.Controllers
                     }
                 }
             }
+
+            return RedirectToAction("Index");
+        }
+
+
+        /// <summary>
+        /// Muestra la vista para editar un proyecto existente.
+        /// </summary>
+        /// <param name="ProyectoID">Identificador del proyecto a editar.</param>
+        /// <returns>Una vista para editar la tecnología si existe, o una vista de error si no se encuentra.</returns>
+        public async Task<IActionResult> Editar(int ProyectoID)
+        {
+            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            Proyecto proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID);
+            int categoriaSeleccionada = proyecto.CategoriaID;
+            var categorias = await repositorioCategoria.ObtenerCategorias(UsuarioID);
+
+            if (proyecto == null)
+            {
+                return View("Error404");
+            }
+
+            ViewBag.Tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
+            ViewBag.TecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(ProyectoID, UsuarioID);
+            ViewBag.Categorias = new SelectList(categorias, "CategoriaID", "Nombre", categoriaSeleccionada);
+            ViewBag.Imagenes = await repositorioImagenProyecto.ObtenerImagenesProyecto(ProyectoID, UsuarioID);
+            return View("CrearEditar", proyecto);
+        }
+
+        /// <summary>
+        /// Actualiza un proyecto existente en el sistema.
+        /// </summary>
+        /// <param name="proyecto">Instancia de la clase proyecto con la información modificada.</param>
+        /// <returns>Redirige a la lista de proyectos si la edición es exitosa, o muestra una vista de error si el modelo es inválido.</returns>
+        
+        [HttpPost]
+        public async Task<IActionResult> Editar(Proyecto proyecto)
+        {
+            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            proyecto.UsuarioID = UsuarioID;
+
+            if (!ModelState.IsValid)
+            {
+                return View("Error404");
+            }
+
+            await repositorioProyecto.EditarProyecto(proyecto);
 
             return RedirectToAction("Index");
         }
