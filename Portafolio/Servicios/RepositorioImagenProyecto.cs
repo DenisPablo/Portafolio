@@ -9,7 +9,7 @@ namespace Portafolio.Servicios
    public interface IRepositorioImagenProyecto
     {
         Task<int> Crear(ImagenProyecto imagenProyecto);
-        Task EliminarImagenProyecto(int ImagenID, int UsuarioID);
+        Task EliminarImagenProyecto(string PublicID, int UsuarioID);
         Task<IEnumerable<ImagenProyecto>> ObtenerImagenesProyecto(int ProyectoID, int UsuarioID);
     }
 
@@ -34,7 +34,7 @@ namespace Portafolio.Servicios
         public async Task<IEnumerable<ImagenProyecto>> ObtenerImagenesProyecto(int ProyectoID, int UsuarioID) 
         {
             using var connection = new SqlConnection(connectionString);
-            string query = @"SELECT ProyectoID, URL
+            string query = @"SELECT ProyectoID, URL, PublicID
                              FROM ImagenProyecto
                              WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID";
 
@@ -42,15 +42,15 @@ namespace Portafolio.Servicios
             return imagenesProyecto;
         }
 
-        public async Task EliminarImagenProyecto(int ImagenID, int UsuarioID) 
+        public async Task EliminarImagenProyecto(string PublicID, int UsuarioID) 
         {
             using var connection = new SqlConnection(connectionString);
 
             string query = @"UPDATE ImagenProyecto
                              SET Estado = 0
-                             WHERE ImagenID = @ImagenID AND UsuarioID = @UsuarioID";
+                             WHERE PublicID = @PublicID AND UsuarioID = @UsuarioID";
 
-            await connection.ExecuteAsync(query, new { ImagenID, UsuarioID });
+            await connection.ExecuteAsync(query, new { PublicID, UsuarioID });
         }
     }
 }

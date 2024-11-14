@@ -64,7 +64,7 @@ namespace Portafolio.Servicios
         /// <exception cref="ArgumentException"></exception>
         public async Task<DeletionResult> ElimanarImagenAsync(string publicID) 
         {
-            if (!string.IsNullOrWhiteSpace(publicID)) 
+            if (string.IsNullOrWhiteSpace(publicID)) 
             {
                 throw new ArgumentException(nameof(publicID));
             }

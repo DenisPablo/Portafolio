@@ -154,6 +154,26 @@ namespace Portafolio.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> BorrarImagen([FromBody] string publicID)
+        {
+            if (string.IsNullOrEmpty(publicID))
+            {
+                return BadRequest("El PublicID no es valido");
+            }
+
+            try
+            {
+                var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+                await cloudinaryService.ElimanarImagenAsync(publicID);
+                await repositorioImagenProyecto.EliminarImagenProyecto(publicID, UsuarioID);
+                return Ok(new { message = "PublicID recibido con exito", publicID});
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
         /// <summary>
         /// Verifica si una categoría con un nombre específico ya existe para el usuario.
         /// </summary>

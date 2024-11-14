@@ -34,6 +34,25 @@
         <input type="file" id="imagenes" name="imagenes" class="form-control" multiple  />
     </div>
 
+
+    @if (Model.ProyectoID != 0)
+    {
+        <div class="row">
+            @foreach (var imagen in ViewBag.Imagenes)
+            {
+                <div class="col-md-3 mb-3">
+                    <!-- Mostrar imagen con un contenedor Bootstrap -->
+                    <div class="card">
+                        <div>
+                            <img src="@imagen.URL" class="card-img-top" alt="Imagen del proyecto" />
+                        </div>
+                        <button type="button" class="btn btn-danger" onclick="borrarImagen('@imagen.PublicID')">Eliminar</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
     <div class="mb-3">
         <label>Seleccionar Tecnologias:</label>
         <div class="checkbox-group mt-3">
@@ -56,23 +75,6 @@
             }
         </div>
     </div>
-
-    @if (Model.ProyectoID != 0)
-    {
-        <div class="row">
-            @foreach (var imagen in ViewBag.Imagenes)
-            {
-                <div class="col-md-3 mb-3">
-                    <!-- Mostrar imagen con un contenedor Bootstrap -->
-                    <div class="card">
-                        <div class="form-check col-2">
-                            <img src="@imagen.URL" class="card-img-top" alt="Imagen del proyecto" />
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
 
     <div id="guardar" class="m-2 ms-auto">
         <button onclick="confirmar()" type="button" class="btn btn-primary">
