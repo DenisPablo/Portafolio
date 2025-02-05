@@ -15,6 +15,6 @@ function borrarImagen(publicID) {
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify("mgkzweanh8xdfwk0oljn")
+            body: JSON.stringify(publicID)
         })
 }

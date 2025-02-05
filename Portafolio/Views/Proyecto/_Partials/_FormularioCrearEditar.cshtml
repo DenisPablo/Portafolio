@@ -1,4 +1,7 @@
 ﻿@model Proyecto
+@{
+    var tecnologiasUsadas = ViewBag.TecnologiasUsadas as IEnumerable<Tecnologia>;
+}
 
 
 <!-- Esto tiene una validacion de CRSF automatica -->
@@ -37,17 +40,12 @@
 
     @if (Model.ProyectoID != 0)
     {
-        <div class="row">
+        <div class="row g-3">
             @foreach (var imagen in ViewBag.Imagenes)
             {
-                <div class="col-md-3 mb-3">
-                    <!-- Mostrar imagen con un contenedor Bootstrap -->
-                    <div class="card">
-                        <div>
-                            <img src="@imagen.URL" class="card-img-top" alt="Imagen del proyecto" />
-                        </div>
-                        <button type="button" class="btn btn-danger" onclick="borrarImagen('@imagen.PublicID')">Eliminar</button>
-                    </div>
+                <div class="col-md-4 position-relative border p-2 rounded text-center">
+                    <input type="checkbox" name="publicIDs" value="@imagen.PublicID" class="position-absolute top-0 start-0 m-2">
+                    <img src="@imagen.URL" alt="Imagen" class="img-fluid rounded">
                 </div>
             }
         </div>
@@ -58,20 +56,11 @@
         <div class="checkbox-group mt-3">
             @foreach (var tecnologia in ViewBag.Tecnologias)
             {
-                @if (ViewBag.TecnologiasUsadas.Contains(tecnologia))
-                {
-                    <div class="form-check col-2">
-                        <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas" value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID" checked/>
-                        <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
-                    </div>
-                }
-                else
-                {    
-                    <div class="form-check col-2">
-                        <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas" value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID" />
-                        <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
-                    </div>
-                }
+                <div class="form-check col-2">
+                    <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas" value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID"
+                    @(tecnologiasUsadas.Any(t => t.TecnologiaID == tecnologia.TecnologiaID) ? "checked" : "") />
+                    <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
+                </div>
             }
         </div>
     </div>

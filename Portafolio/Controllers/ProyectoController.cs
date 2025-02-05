@@ -139,14 +139,22 @@ namespace Portafolio.Controllers
         /// <returns>Redirige a la lista de proyectos si la edición es exitosa, o muestra una vista de error si el modelo es inválido.</returns>
         
         [HttpPost]
-        public async Task<IActionResult> Editar(Proyecto proyecto)
+        public async Task<IActionResult> Editar(Proyecto proyecto, int[] tecnologiasSeleccionadas)
         {
             var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var ProyectoID = proyecto.ProyectoID;
             proyecto.UsuarioID = UsuarioID;
 
             if (!ModelState.IsValid)
             {
                 return View("Error404");
+            }
+
+
+            //Se cargan las tecnologias seleccionadas.
+            foreach (var TecnologiaID in tecnologiasSeleccionadas)
+            {
+                await repositorioTecnologiaUsada.Crear(ProyectoID, TecnologiaID, UsuarioID);
             }
 
             await repositorioProyecto.EditarProyecto(proyecto);
