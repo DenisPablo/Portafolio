@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Portafolio.Models;
+using System.Data;
 
 namespace Portafolio.Servicios
 {
@@ -8,7 +9,7 @@ namespace Portafolio.Servicios
     public interface IRepositorioTecnologiaUsada
     {
         Task<int> Crear(int ProyectoID, int TecnologiaID, int UsuarioID);
-        Task EliminarTecnologia(int TecnologiaID, int UsuarioID);
+        Task EliminarTecnologia(int TecnologiaID,int ProyectoID, int UsuarioID);
         Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyecto(int ProyectoID, int UsuarioID);
     }
 
@@ -46,14 +47,12 @@ namespace Portafolio.Servicios
             return tecnologias;
         }
 
-        public async Task EliminarTecnologia(int TecnologiaID, int UsuarioID) {
+        public async Task EliminarTecnologia(int TecnologiaID,int ProyectoID, int UsuarioID) {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"UPDATE TecnologiaUsada
-                             SET Estado = 0
-                             WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID";
+            var parametros = new { TecnologiaID, ProyectoID, UsuarioID };
 
-            await connection.ExecuteAsync(query, new { TecnologiaID, UsuarioID });
+            await connection.ExecuteAsync("EliminarTecnologiaUsada", parametros, commandType: CommandType.StoredProcedure);
         }
 
 

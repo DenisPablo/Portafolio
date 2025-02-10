@@ -36,7 +36,7 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
             string query = @"SELECT ProyectoID, URL, PublicID
                              FROM ImagenProyecto
-                             WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID";
+                             WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID AND Estado = 1";
 
             var imagenesProyecto = await connection.QueryAsync<ImagenProyecto>(query, new { ProyectoID, UsuarioID });
             return imagenesProyecto;

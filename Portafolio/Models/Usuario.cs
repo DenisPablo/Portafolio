@@ -10,6 +10,8 @@ namespace Portafolio.Models
     {
         public int UsuarioId { get; set; }
         [Required]
+        public string EmailNormalizado { get; set; }
+        [Required]
         public string HashContrasena { get; set; }
         [Required]
         public bool Estado { get; set; }

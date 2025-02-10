@@ -110,7 +110,7 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
 
             string query = @"UPDATE Proyecto 
-                            SET Titulo = @Titulo, Descripcion = @Descripcion, CategoriaID = @CategoriaID,  
+                            SET Titulo = @Titulo, Descripcion = @Descripcion, CategoriaID = @CategoriaID
                             WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
             await connection.ExecuteAsync(query, proyecto);

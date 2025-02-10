@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using Portafolio.Models;
 using Portafolio.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,10 @@ builder.Services.AddTransient<ICloudinaryService, CloudinaryService>();
 
 builder.Services.AddTransient<IProyectoUtilidades, ProyectoUtilidades>();
 builder.Services.AddTransient<IRepositorioTecnologiaUsada, RepositorioTecnologiaUsada>();
+
+builder.Services.AddTransient<IUserStore<Usuario>, UsuarioStore>();
+builder.Services.AddIdentityCore<Usuario>();
+
 
 var app = builder.Build();
 
