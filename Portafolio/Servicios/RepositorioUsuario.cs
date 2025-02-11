@@ -29,10 +29,11 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            var query = @"INSERT INTO Usuario (EmailNormalizado,HashContrasena)
-                        VALUES (@EmailNormalizado, @HashContrasena);";
+            var query = @"INSERT INTO Usuario (EmailNormalizado,HashContrasena, Estado)
+                        VALUES (@EmailNormalizado, @HashContrasena, 1);
+                        SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
-            var id = await connection.QuerySingleAsync<int>(query);
+            var id = await connection.QuerySingleAsync<int>(query, usuario);
 
             return id;
         }

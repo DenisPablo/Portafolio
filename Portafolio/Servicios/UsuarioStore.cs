@@ -26,7 +26,12 @@ namespace Portafolio.Servicios
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
+                if (repositorioUsuario is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            
         }
 
         public async Task<Usuario> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
