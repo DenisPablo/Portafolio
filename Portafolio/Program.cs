@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 // Añadadimos un servicio Transient (Transitorio) a nuestro programa.
 builder.Services.AddScoped<IRepositorioCategoria, RepositorioCategoria>();
@@ -23,6 +24,14 @@ builder.Services.AddTransient<IRepositorioTecnologiaUsada, RepositorioTecnologia
 builder.Services.AddScoped<IUserStore<Usuario>, UsuarioStore>();
 builder.Services.AddIdentityCore<Usuario>().AddErrorDescriber<MensajesDeErrorIdentity>();
 
+builder.Services.AddTransient<SignInManager<Usuario>>();
+builder.Services.AddAuthentication(option => { 
+    option.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+    option.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+    option.DefaultSignOutScheme = IdentityConstants.ApplicationScheme;
+}).AddCookie(IdentityConstants.ApplicationScheme);
+
+builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();
 
 var app = builder.Build();
 
@@ -39,6 +48,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

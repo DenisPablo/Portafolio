@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Portafolio.Models;
 
@@ -7,10 +8,12 @@ namespace Portafolio.Controllers
     public class UsuarioController : Controller
     {
         private readonly UserManager<Usuario> userManager;
+        private readonly SignInManager<Usuario> signInManager;
 
-        public UsuarioController(UserManager<Usuario> userManager) 
+        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager) 
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
 
@@ -33,6 +36,7 @@ namespace Portafolio.Controllers
 
         if (resultado.Succeeded)
         {
+                await signInManager.SignInAsync(usuario, isPersistent: true);
                 return RedirectToAction("Index", "Proyecto");
         }
 
@@ -44,5 +48,33 @@ namespace Portafolio.Controllers
         return View(modelo);
     }
 
-   }
+        [HttpPost]
+        public async Task<IActionResult> CerrarSesion()
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return RedirectToAction("Index", "Proyecto");
+        }
+
+        [HttpGet]
+        public IActionResult IniciarSesion()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> IniciarSesion(IniciarSesionViewModel modelo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+            var resultado = await signInManager.PasswordSignInAsync(modelo.Email, modelo.Password, isPersistent: true, lockoutOnFailure: false);
+            if (resultado.Succeeded)
+            {
+                return RedirectToAction("Index", "Proyecto");
+            }
+            ModelState.AddModelError(string.Empty, "Inicio de sesion fallido");
+            return View(modelo);
+        }
+    }
 }
