@@ -1,11 +1,18 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Portafolio.Models;
 using Portafolio.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+
+var politicaDeSeguridad = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+builder.Services.AddControllersWithViews(options => {
+                                                        options.Filters.Add(new AuthorizeFilter(politicaDeSeguridad))
+                                                    ;});
 builder.Services.AddHttpContextAccessor();
 
 // Añadadimos un servicio Transient (Transitorio) a nuestro programa.
@@ -29,7 +36,10 @@ builder.Services.AddAuthentication(option => {
     option.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
     option.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
     option.DefaultSignOutScheme = IdentityConstants.ApplicationScheme;
-}).AddCookie(IdentityConstants.ApplicationScheme);
+}).AddCookie(IdentityConstants.ApplicationScheme, options =>
+{
+    options.LoginPath = "/Usuario/IniciarSesion";
+});
 
 builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();
 

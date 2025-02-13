@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Portafolio.Models;
@@ -16,13 +17,14 @@ namespace Portafolio.Controllers
             this.signInManager = signInManager;
         }
 
-
+        [AllowAnonymous]
         public IActionResult Registro()
         {  
             return View(); 
         }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Registro(RegistroViewModel modelo)
     {
 
@@ -52,16 +54,18 @@ namespace Portafolio.Controllers
         public async Task<IActionResult> CerrarSesion()
         {
             await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
-            return RedirectToAction("Index", "Proyecto");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult IniciarSesion()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> IniciarSesion(IniciarSesionViewModel modelo)
         {
             if (!ModelState.IsValid)

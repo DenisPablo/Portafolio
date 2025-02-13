@@ -10,12 +10,12 @@ namespace Portafolio.Controllers
     public class CategoriaController : Controller
     {
         private readonly IRepositorioCategoria repositorioCategoria;
-        private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly IServicioUsuario servicioUsuario;
 
-        public CategoriaController(IRepositorioCategoria repositorioCategoria, IRepositorioUsuario repositorioUsuario)
+        public CategoriaController(IRepositorioCategoria repositorioCategoria, IServicioUsuario servicioUsuario)
         {
             this.repositorioCategoria = repositorioCategoria;
-            this.repositorioUsuario = repositorioUsuario;
+            this.servicioUsuario = servicioUsuario;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista con la lista de categorías.</returns>
         public async Task<IActionResult> Index()
         {
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
             IEnumerable<Categoria> categorias = await repositorioCategoria.ObtenerCategorias(UsuarioID);
 
             return View(categorias);
@@ -54,7 +54,7 @@ namespace Portafolio.Controllers
                 return View(categoria);
             }
 
-            categoria.UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            categoria.UsuarioID = servicioUsuario.ObtenerUsuarioId();
             await repositorioCategoria.Crear(categoria);
 
             return RedirectToAction("Index");
@@ -67,7 +67,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista de confirmación si la categoría existe, o una vista de error si no se encuentra.</returns>
         public async Task<IActionResult> ConfirmarEliminar(int CategoriaID)
         {
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Categoria categoria = await repositorioCategoria.ObtenerCategoriasPorID(CategoriaID, UsuarioID);
 
             if (categoria == null)
@@ -86,7 +86,7 @@ namespace Portafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Eliminar(int CategoriaID)
         {
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Categoria categoria = await repositorioCategoria.ObtenerCategoriasPorID(CategoriaID, UsuarioID);
 
             if (categoria == null)
@@ -106,7 +106,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista para editar la categoría si existe, o una vista de error si no se encuentra.</returns>
         public async Task<IActionResult> Editar(int CategoriaID)
         {
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Categoria categoria = await repositorioCategoria.ObtenerCategoriasPorID(CategoriaID, UsuarioID);
 
             if (categoria == null)
@@ -125,7 +125,7 @@ namespace Portafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(Categoria categoria)
         {
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
             categoria.UsuarioID = UsuarioID;
 
             if (!ModelState.IsValid)
@@ -146,7 +146,7 @@ namespace Portafolio.Controllers
         [HttpGet]
         public async Task<IActionResult> VerificarExistenciaCategoria(string nombre)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             var yaExisteCategoria = await repositorioCategoria.ExisteCategoria(nombre, UsuarioID);
 
             if (yaExisteCategoria)

@@ -8,7 +8,6 @@ namespace Portafolio.Servicios
     {
         Task<Usuario> BuscarUsuarioPorEmail(string EmailNormalizado);
         Task<int> CrearUsuario(Usuario usuario);
-        Task<int> ObtenerUsuario();
     }
 
     /// <summary>
@@ -48,11 +47,6 @@ namespace Portafolio.Servicios
             Usuario usuario = await connection.QuerySingleOrDefaultAsync<Usuario>(query, new { EmailNormalizado });
 
             return usuario;
-        }
-
-        public Task<int> ObtenerUsuario() 
-        {
-            return Task.FromResult(1);
         }
     }
 }

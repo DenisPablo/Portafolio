@@ -5,6 +5,7 @@ namespace Portafolio.Servicios
 
     public interface IServicioUsuario
     {
+        int ObtenerUsuarioId();
     }
     public class ServicioUsuario : IServicioUsuario
     {

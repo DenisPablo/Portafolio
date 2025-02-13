@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Portafolio.Models;
 using Portafolio.Servicios;
@@ -18,28 +19,30 @@ namespace Portafolio.Controllers
         private readonly IRepositorioCategoria repositorioCategoria;
         private readonly IRepositorioTecnologia repositorioTecnologia;
         private readonly IRepositorioTecnologiaUsada repositorioTecnologiaUsada;
+        private readonly IServicioUsuario servicioUsuario;
 
-        public ProyectoController(IRepositorioProyecto repositorioProyecto, IRepositorioUsuario repositorioUsuario, ICloudinaryService cloudinaryService,
+        public ProyectoController(IRepositorioProyecto repositorioProyecto, ICloudinaryService cloudinaryService,
             IRepositorioImagenProyecto repositorioImagenProyecto, IProyectoUtilidades proyectoUtilidades, IRepositorioCategoria repositorioCategoria, IRepositorioTecnologia repositorioTecnologia,
-            IRepositorioTecnologiaUsada repositorioTecnologiaUsada)
+            IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IServicioUsuario servicioUsuario)
         {
             this.repositorioProyecto = repositorioProyecto;
-            this.repositorioUsuario = repositorioUsuario;
             this.cloudinaryService = cloudinaryService;
             this.repositorioImagenProyecto = repositorioImagenProyecto;
             this.proyectoUtilidades = proyectoUtilidades;
             this.repositorioCategoria = repositorioCategoria;
             this.repositorioTecnologia = repositorioTecnologia;
             this.repositorioTecnologiaUsada = repositorioTecnologiaUsada;
+            this.servicioUsuario = servicioUsuario;
         }
 
         /// <summary>
         /// Renderiza una vista con todos los proyectos pertenecientes al usuario
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
             IEnumerable<Proyecto> proyectos = await repositorioProyecto.ObtenerProyectos(UsuarioID);
             return View(proyectos);
         }
@@ -51,7 +54,7 @@ namespace Portafolio.Controllers
         public async Task<IActionResult> Crear() 
         {
                 Proyecto proyecto = new Proyecto();
-                var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+                var UsuarioID = servicioUsuario.ObtenerUsuarioId();
                 var categorias = await repositorioCategoria.ObtenerCategorias(UsuarioID);
                 var tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
 
@@ -75,10 +78,10 @@ namespace Portafolio.Controllers
             {
               return View(proyecto);
             }
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
 
             // Se carga el proyecto
-            proyecto.UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            proyecto.UsuarioID = UsuarioID;
             proyecto.Descripcion = proyectoUtilidades.LimpiarInputHTML(proyecto.Descripcion);
             proyecto.FechaPubli = DateTime.Now;
             var ProyectoID  = await repositorioProyecto.Crear(proyecto);
@@ -98,7 +101,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista para editar la tecnología si existe, o una vista de error si no se encuentra.</returns>
         public async Task<IActionResult> Editar(int ProyectoID)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Proyecto proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID);
             int categoriaSeleccionada = proyecto.CategoriaID;
             var categorias = await repositorioCategoria.ObtenerCategorias(UsuarioID);
@@ -124,7 +127,7 @@ namespace Portafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(Proyecto proyecto, int[] tecnologiasSeleccionadas, IEnumerable<IFormFile> imagenes, string[] publicIDs)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
 
             if (!ModelState.IsValid)
             {
@@ -155,7 +158,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista de confirmación si el proyecto existe, o una vista de error si no se encuentra.</returns>
         public async Task<IActionResult> ConfirmarEliminar(int ProyectoID)
         {
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Proyecto proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID); 
 
             if (proyecto == null)
@@ -174,7 +177,7 @@ namespace Portafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Eliminar(int ProyectoID)
         {
-            int UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Proyecto proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID);
 
             if (proyecto == null)

@@ -10,12 +10,12 @@ namespace Portafolio.Controllers
     public class TecnologiaController : Controller
     {
         private readonly IRepositorioTecnologia repositorioTecnologia;
-        private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly IServicioUsuario servicioUsuario;
 
-        public TecnologiaController(IRepositorioTecnologia repositorioTecnologia, IRepositorioUsuario repositorioUsuario)
+        public TecnologiaController(IRepositorioTecnologia repositorioTecnologia, IServicioUsuario servicioUsuario)
         {
             this.repositorioTecnologia = repositorioTecnologia;
-            this.repositorioUsuario = repositorioUsuario;
+            this.servicioUsuario = servicioUsuario;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista con la lista de tecnologías.</returns>
         public async Task<IActionResult> Index()
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             var tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
 
             return View(tecnologias);
@@ -36,7 +36,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista con un modelo de tecnología vacío.</returns>
         public IActionResult Crear()
         {
-            Tecnologia tecnologia = new Tecnologia();
+            Tecnologia tecnologia = new();
             return View("CrearEditar", tecnologia);
         }
 
@@ -53,7 +53,7 @@ namespace Portafolio.Controllers
                 return View("Error404");
             }
 
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
 
             tecnologia.UsuarioID = UsuarioID;
 
@@ -70,7 +70,7 @@ namespace Portafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Eliminar(int TecnologiaID)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Tecnologia tecnologia = await repositorioTecnologia.ObtenerTecnologiasPorID(TecnologiaID, UsuarioID);
 
             if (tecnologia == null)
@@ -89,7 +89,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista de confirmación si la tecnología existe, o una vista de error si no se encuentra.</returns>
         public async Task<IActionResult> ConfirmarEliminar(int TecnologiaID)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Tecnologia tecnologia = await repositorioTecnologia.ObtenerTecnologiasPorID(TecnologiaID, UsuarioID);
 
             if (tecnologia == null)
@@ -107,7 +107,7 @@ namespace Portafolio.Controllers
         /// <returns>Una vista para editar la tecnología si existe, o una vista de error si no se encuentra.</returns>
         public async Task<IActionResult> Editar(int TecnologiaID)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Tecnologia tecnologia = await repositorioTecnologia.ObtenerTecnologiasPorID(TecnologiaID, UsuarioID);
 
             if (tecnologia == null)
@@ -126,7 +126,7 @@ namespace Portafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(Tecnologia tecnologia)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             tecnologia.UsuarioID = UsuarioID;
 
             if (!ModelState.IsValid)
@@ -147,7 +147,7 @@ namespace Portafolio.Controllers
         [HttpGet]
         public async Task<IActionResult> VerificarExistenciaTecnologia(string nombre)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             var yaExisteTecnologia = await repositorioTecnologia.ExisteTecnologia(nombre, UsuarioID);
 
             if (yaExisteTecnologia)
