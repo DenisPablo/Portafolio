@@ -5,11 +5,11 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <span class="nav-link text-white">Hola, @User.Identity.Name</span>
+            <span class="nav-link text-white"><b class="text-success">Hola, @User.Identity.Name.Split('@')[0]</b></span>
         </li>    
         <li class="nav-item">
-            <form class="form-inline" asp-action="CerrarSesion" asp-controller="Usuario">
-                <button type="submit" class="btn btn-link nav-link text-white">Cerrar sesión</button>
+            <form asp-controller="Usuario" asp-action="CerrarSesion">
+                <button class="btn btn-secondary" type="submit"><i class="bi bi-emoji-wink-fill fs-5"></i></button>
             </form>
         </li>
     } else

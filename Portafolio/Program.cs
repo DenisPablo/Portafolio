@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(option => {
     option.DefaultSignOutScheme = IdentityConstants.ApplicationScheme;
 }).AddCookie(IdentityConstants.ApplicationScheme, options =>
 {
-    options.LoginPath = "/Usuario/IniciarSesion";
+    options.LoginPath = "/Home/Index";
 });
 
 builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();

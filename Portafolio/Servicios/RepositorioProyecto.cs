@@ -12,6 +12,7 @@ namespace Portafolio.Servicios
         Task<bool> ExisteProyecto(string Titulo, int UsuarioID);
         Task<Proyecto> ObtenerProyectoPorID(int ProyectoID, int UsuarioID);
         Task<IEnumerable<Proyecto>> ObtenerProyectos(int usuarioID);
+        Task<IEnumerable<Proyecto>> ObtenerProyectosVisitante();
     }
 
     /// <summary>
@@ -61,6 +62,24 @@ namespace Portafolio.Servicios
 
             var proyectos = await connection.QueryAsync<Proyecto>(query, new { UsuarioID });
             
+            return proyectos;
+        }
+
+        /// <summary>
+        /// Obtiene los proyectos de un usuario de la base de datos.
+        /// </summary>
+        /// <param name="usuarioID">Identifica al propietario de los proyectos</param>
+        /// <returns>Enumerable de proyectos</returns>
+        public async Task<IEnumerable<Proyecto>> ObtenerProyectosVisitante()
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+                            FROM Proyecto 
+                            WHERE Estado = 1;";
+
+            var proyectos = await connection.QueryAsync<Proyecto>(query);
+
             return proyectos;
         }
 

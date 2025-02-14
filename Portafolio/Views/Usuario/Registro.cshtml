@@ -4,24 +4,36 @@
     ViewData["Title"] = "Registro";
 }
 
-<h1>Registrate</h1>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card bg-dark text-white p-4 w-75 h-50">
+        <h1 class="card-title text-center">Registrarse</h1>
+        <div class="card-body">
+            <form asp-action="Registro" asp-controller="Usuario">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<form asp-action="Registro">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email"/>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control"/>
-        <span asp-validation-for="Email" class="text-danger"></span>
+                <div class="mb-3">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Contraseña"/>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <input asp-for="Password2" type="password" class="form-control" placeholder="Confirmar contraseña" />
+                    <span asp-validation-for="Password2" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <button class="btn btn-primary">Registrarse</button>
+                    <a class="btn btn-success" asp-controller="Usuario" asp-action="IniciarSesion">Iniciar Sesion</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-    </div>
-
-    <button class="btn btn-primary">Registrarse</button>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
