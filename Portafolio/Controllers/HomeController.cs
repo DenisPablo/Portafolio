@@ -29,7 +29,7 @@ namespace Portafolio.Controllers
 
         public async Task<IActionResult> Proyectos()
         {
-            List<ProyectoViewModel> proyectosViewModel = new();
+            List<ProyectoViewModel> proyectosViewModel = [];
             var proyectos = await repositorioProyecto.ObtenerProyectosVisitante();
 
             foreach (var proyecto in proyectos)
@@ -39,7 +39,7 @@ namespace Portafolio.Controllers
                 var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
 
 
-                ProyectoViewModel proyectoViewModel = new(proyecto.Titulo, proyecto.Descripcion, tecnologias, proyecto.Antiguedad, categoria.Nombre);
+                ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID,proyecto.Titulo, proyecto.Descripcion, tecnologias, proyecto.Antiguedad, categoria.Nombre);
 
                 proyectosViewModel.Add(proyectoViewModel);
               
@@ -47,6 +47,18 @@ namespace Portafolio.Controllers
 
 
             return View(proyectosViewModel);
+        }
+
+        [Route("Proyectos/Detalles/{ProyectoID}")]
+        public async Task<IActionResult> Detalles(int ProyectoID) 
+        {
+            var proyecto = await repositorioProyecto.ObtenerProyectoDetalle(ProyectoID);
+            var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
+            var tecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyectoDetalles(ProyectoID);
+
+            ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID, proyecto.Titulo, proyecto.Descripcion, tecnologiasUsadas, proyecto.Antiguedad, categoria.Nombre);
+
+            return View(proyectoViewModel);
         }
     }
 }

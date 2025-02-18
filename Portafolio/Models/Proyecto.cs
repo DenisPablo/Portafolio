@@ -14,7 +14,6 @@ namespace Portafolio.Models
         [StringLength(50, ErrorMessage ="El titulo es demasiado largo")]
         public string Titulo { get; set; }
         [Required]
-        [StringLength(2000, ErrorMessage ="La Descripcion es demasiada extensa. El Maximo son 2000 caracteres")]
         public string Descripcion {  get; set; }
         /// <summary>
         /// Cada proyecto le pertenece a un usuario y solo el puede modificar y eliminar la misma.

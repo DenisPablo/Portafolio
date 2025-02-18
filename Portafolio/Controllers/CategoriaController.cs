@@ -25,7 +25,7 @@ namespace Portafolio.Controllers
         public async Task<IActionResult> Index()
         {
             int UsuarioID = servicioUsuario.ObtenerUsuarioId();
-            IEnumerable<Categoria> categorias = await repositorioCategoria.ObtenerCategorias(UsuarioID);
+            IEnumerable<Categoria> categorias = await repositorioCategoria.ObtenerCategoriasActivas(UsuarioID);
 
             return View(categorias);
         }

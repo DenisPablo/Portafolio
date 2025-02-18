@@ -1,0 +1,20 @@
+﻿@model ProyectoViewModel
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+<div class="container">
+    <div class="col-10 card bg-dark">
+        <div class="card-body d-flex justify-content-between">
+            <div class="col-12 text-center">
+                <h1>@Model.Titulo</h1>
+            </div>
+        </div>
+
+
+        <div class="col-10 bg-dark ms-auto text-center">
+            @Html.Raw(Model.Descripcion)
+        </div>
+
+
+    </div>
+</div>

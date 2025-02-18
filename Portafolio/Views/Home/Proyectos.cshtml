@@ -3,35 +3,41 @@
 <div class="row">
     @foreach (var proyecto in Model)
     {
-        <div class="col-10 card  bg-dark mt-2">
-            <div class="card-body d-flex justify-content-between">
-                <div class="col-2 left-div">
-                    <img class="img-thumbnail" src="~/Imagenes/web-design-3411373_640.jpg" />
+        <div class="col-12 card bg-dark mt-2 row">
+            <div class="card-body d-flex justify-content-between row">
+
+                <div class="col-4 me-1 left-div">
+                    <img class="img-thumbnail mx-auto" src="~/Imagenes/web-design-3411373_640.jpg" />
+                    <div>
+                        <div>
+                            <span>
+                                <strong class="text-success">Tecnologias: </strong>
+                                @foreach (var tecnologia in proyecto.Tecnologias)
+                                {
+                                    @tecnologia.Nombre @:&nbsp;
+                                }
+                            </span>
+                        </div>
+
+                        <div>
+                            <span><strong class="text-success">Meses de antiguedad: </strong>@proyecto.Antiguedad</span>
+                        </div>
+
+                        <div>
+                            <span><strong class="text-success">Categoria: </strong>@proyecto.Categoria</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col-8 right-div">
+
+                <div class="col-7 right-div">
                     <h5 class="text-center">@proyecto.Titulo</h5>
                     <div class="text-justify">
-                        @Html.Raw(proyecto.Descripcion)
+                        @Html.Raw(proyecto.Descripcion.Length > 500 ? proyecto.Descripcion.Substring(0, 500) + " " : proyecto.Descripcion)
+                        <a asp-controller="Proyectos" asp-action="Detalles" asp-route-id="@proyecto.ProyectoID">Ver detalles</a>
                     </div>
-
-                    <div>
-                        <span>Tecnologias:</span>
-                        @foreach (var tecnologia in proyecto.Tecnologias)
-                        {
-                            <span>@tecnologia</span>
-                        }
-                    </div>
-
-                    <div>
-                        <span>Meses @proyecto.Antiguedad</span>
-                    </div>
-
-                    <div>
-                        <span>Categoria @proyecto.Categoria</span>
-                    </div>
-
                 </div>
+
             </div>
         </div>
     }

@@ -11,6 +11,7 @@ namespace Portafolio.Servicios
         Task<int> Crear(int ProyectoID, int TecnologiaID, int UsuarioID);
         Task EliminarTecnologia(int TecnologiaID,int ProyectoID, int UsuarioID);
         Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyecto(int ProyectoID, int UsuarioID);
+        Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyectoDetalles(int ProyectoID);
     }
 
     public class RepositorioTecnologiaUsada : IRepositorioTecnologiaUsada
@@ -44,6 +45,18 @@ namespace Portafolio.Servicios
                             WHERE tu.ProyectoID = @ProyectoID AND t.UsuarioID = @UsuarioID AND tu.UsuarioID = @UsuarioID;";
             
             var tecnologias = await connection.QueryAsync<Tecnologia>(query, new { ProyectoID, UsuarioID });
+            return tecnologias;
+        }
+
+        public async Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyectoDetalles(int ProyectoID)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"SELECT t.TecnologiaID, t.Nombre, t.Estado, t.UsuarioID From Tecnologia t 
+                            JOIN TecnologiaUsada tu ON t.TecnologiaID = tu.TecnologiaID
+                            WHERE tu.ProyectoID = @ProyectoID;";
+
+            var tecnologias = await connection.QueryAsync<Tecnologia>(query, new { ProyectoID });
             return tecnologias;
         }
 

@@ -12,7 +12,7 @@ namespace Portafolio.Servicios
         Task EditarCategoria(Categoria categoria);
         Task EliminarCategoria(int CategoriaID, int UsuarioID);
         Task<bool> ExisteCategoria(string nombre, int UsuarioID);
-        Task<IEnumerable<Categoria>> ObtenerCategorias(int id);
+        Task<IEnumerable<Categoria>> ObtenerCategoriasActivas(int id);
         Task<Categoria> ObtenerCategoriasPorID(int CategoriaID, int UsuarioID);
     }
 
@@ -50,12 +50,28 @@ namespace Portafolio.Servicios
         /// </summary>
         /// <param name="UsuarioID">Identifica al propietario de las categorias</param>
         /// <returns>IEnumerable de las categorias obtenidas</returns>
-        public async Task<IEnumerable<Categoria>> ObtenerCategorias(int UsuarioID)
+        public async Task<IEnumerable<Categoria>> ObtenerCategoriasActivas(int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
             string query = @"SELECT CategoriaID, Nombre, Estado 
                              FROM Categoria 
                              WHERE UsuarioID = @UsuarioID AND Estado = 1";
+
+            var categorias = await connection.QueryAsync<Categoria>(query, new { UsuarioID });
+            return categorias;
+        }
+
+        /// <summary>
+        /// Obtiene todas las categorias de la base datos que le pertenecen a un usuario.
+        /// </summary>
+        /// <param name="UsuarioID">Identifica al propietario de las categorias</param>
+        /// <returns>IEnumerable de las categorias obtenidas</returns>
+        public async Task<IEnumerable<Categoria>> ObtenerCategoriasInactivas(int UsuarioID)
+        {
+            using var connection = new SqlConnection(connectionString);
+            string query = @"SELECT CategoriaID, Nombre, Estado 
+                             FROM Categoria 
+                             WHERE UsuarioID = @UsuarioID AND Estado = 0";
 
             var categorias = await connection.QueryAsync<Categoria>(query, new { UsuarioID });
             return categorias;
@@ -72,12 +88,11 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
             string query = @"SELECT CategoriaID, Nombre, Estado 
                              FROM Categoria 
-                             WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID AND Estado = 1";
+                             WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID";
 
             var categoria = await connection.QueryFirstOrDefaultAsync<Categoria>(query, new { CategoriaID, UsuarioID });
             return categoria;
         }
-
 
         /// <summary>
         /// Marca una categoria como deshabilitada (borrado logico).

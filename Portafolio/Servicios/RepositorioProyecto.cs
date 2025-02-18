@@ -12,6 +12,7 @@ namespace Portafolio.Servicios
         Task<bool> ExisteProyecto(string Titulo, int UsuarioID);
         Task<Proyecto> ObtenerProyectoPorID(int ProyectoID, int UsuarioID);
         Task<IEnumerable<Proyecto>> ObtenerProyectos(int usuarioID);
+        Task<Proyecto> ObtenerProyectoDetalle(int ProyectoID);
         Task<IEnumerable<Proyecto>> ObtenerProyectosVisitante();
     }
 
@@ -64,6 +65,22 @@ namespace Portafolio.Servicios
             
             return proyectos;
         }
+        /// <summary>
+        /// Obtiene los detalles de un proyecto
+        /// </summary>
+        /// <returns>IEnumerable proyectos</returns>
+        public async Task<Proyecto> ObtenerProyectoDetalle(int ProyectoID)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+                            FROM Proyecto 
+                            WHERE ProyectoID = @ProyectoID AND Estado = 1;";
+
+            var proyectos = await connection.QueryFirstOrDefaultAsync<Proyecto>(query, new { ProyectoID });
+
+            return proyectos;
+        }
 
         /// <summary>
         /// Obtiene los proyectos de un usuario de la base de datos.
@@ -74,7 +91,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
                             FROM Proyecto 
                             WHERE Estado = 1;";
 

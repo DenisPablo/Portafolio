@@ -55,9 +55,9 @@ namespace Portafolio.Controllers
         {
                 Proyecto proyecto = new Proyecto();
                 var UsuarioID = servicioUsuario.ObtenerUsuarioId();
-                var categorias = await repositorioCategoria.ObtenerCategorias(UsuarioID);
+                var categorias = await repositorioCategoria.ObtenerCategoriasActivas(UsuarioID);
                 var tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
-
+                
                 ViewBag.Tecnologias = tecnologias;
                 ViewBag.TecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, UsuarioID);
                 ViewBag.Categorias = new SelectList(categorias, "CategoriaID", "Nombre");
@@ -73,17 +73,18 @@ namespace Portafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear(Proyecto proyecto, IEnumerable<IFormFile> imagenes, int[] tecnologiasSeleccionadas) 
         {
-
-            if (!ModelState.IsValid) 
-            {
-              return View(proyecto);
-            }
             var UsuarioID = servicioUsuario.ObtenerUsuarioId();
 
             // Se carga el proyecto
             proyecto.UsuarioID = UsuarioID;
             proyecto.Descripcion = proyectoUtilidades.LimpiarInputHTML(proyecto.Descripcion);
             proyecto.FechaPubli = DateTime.Now;
+
+            if (!ModelState.IsValid) 
+            {
+              return View("CrearEditar", proyecto);
+            }
+           
             var ProyectoID  = await repositorioProyecto.Crear(proyecto);
 
             //Se cargan las tecnologias seleccionadas.
@@ -94,6 +95,7 @@ namespace Portafolio.Controllers
 
             return RedirectToAction("Index");
         }
+
         /// <summary>
         /// Muestra la vista para editar un proyecto existente.
         /// </summary>
@@ -104,7 +106,7 @@ namespace Portafolio.Controllers
             var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             Proyecto proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID);
             int categoriaSeleccionada = proyecto.CategoriaID;
-            var categorias = await repositorioCategoria.ObtenerCategorias(UsuarioID);
+            var categorias = await repositorioCategoria.ObtenerCategoriasActivas(UsuarioID);
 
             if (proyecto == null)
             {
