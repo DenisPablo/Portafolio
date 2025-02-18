@@ -14,12 +14,14 @@ namespace Portafolio.Controllers
         private readonly IRepositorioProyecto repositorioProyecto;
         private readonly IRepositorioTecnologiaUsada repositorioTecnologiaUsada;
         private readonly IRepositorioCategoria repositorioCategoria;
+        private readonly IRepositorioImagenProyecto repositorioImagenProyecto;
 
-        public HomeController(IRepositorioProyecto repositorioProyecto, IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IRepositorioCategoria repositorioCategoria)
+        public HomeController(IRepositorioProyecto repositorioProyecto, IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IRepositorioCategoria repositorioCategoria, IRepositorioImagenProyecto repositorioImagenProyecto)
         {
             this.repositorioProyecto = repositorioProyecto;
             this.repositorioTecnologiaUsada = repositorioTecnologiaUsada;
             this.repositorioCategoria = repositorioCategoria;
+            this.repositorioImagenProyecto = repositorioImagenProyecto;
         }
 
         public IActionResult Index() 
@@ -37,9 +39,9 @@ namespace Portafolio.Controllers
                 IEnumerable<Tecnologia> tecnologias = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, proyecto.UsuarioID);
                 
                 var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
+                IEnumerable<ImagenProyecto> Imagenes = [];
 
-
-                ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID,proyecto.Titulo, proyecto.Descripcion, tecnologias, proyecto.Antiguedad, categoria.Nombre);
+                ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID,proyecto.Titulo, proyecto.Descripcion, tecnologias, proyecto.Antiguedad, categoria.Nombre, Imagenes);
 
                 proyectosViewModel.Add(proyectoViewModel);
               
@@ -55,8 +57,9 @@ namespace Portafolio.Controllers
             var proyecto = await repositorioProyecto.ObtenerProyectoDetalle(ProyectoID);
             var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
             var tecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyectoDetalles(ProyectoID);
+            var imagenes = await repositorioImagenProyecto.ObtenerImagenesProyecto(proyecto.ProyectoID, proyecto.UsuarioID);
 
-            ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID, proyecto.Titulo, proyecto.Descripcion, tecnologiasUsadas, proyecto.Antiguedad, categoria.Nombre);
+            ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID, proyecto.Titulo, proyecto.Descripcion, tecnologiasUsadas, proyecto.Antiguedad, categoria.Nombre, imagenes);
 
             return View(proyectoViewModel);
         }

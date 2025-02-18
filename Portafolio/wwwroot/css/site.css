@@ -80,15 +80,3 @@ body {
     transform: translate(-50%, -50%);
     clip-path: polygon(0 0, 100% 100%, 100% 0);
 }
-
-.custom-label {
-    margin-left: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    color: white;
-    transition: color 0.3s;
-}
-
-.custom-label:hover {
-    color: #007bff;
-}

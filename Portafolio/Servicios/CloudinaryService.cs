@@ -49,7 +49,7 @@ namespace Portafolio.Servicios
             var ParametrosSubida = new ImageUploadParams()
             {
                 File = new FileDescription(nombre, imageStream),
-                Transformation = new Transformation().Height(1000).Width(1000).Crop("fill")
+                Transformation = new Transformation().Height(1000).Width(1000).Crop("fit").AspectRatio(16,9).Quality("100")
             };
 
             var results = await _cloudinary.UploadAsync(ParametrosSubida);

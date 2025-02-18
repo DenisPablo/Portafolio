@@ -1,0 +1,13 @@
+﻿.carousel-item img {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.galeria {
+    float: right; /* Flota a la derecha para que el texto la envuelva */
+    width: 800px; /* Ancho fijo para la galería */
+    height: 400px; /* Alto fijo para la galería */
+    margin-left: 20px; /* Espacio a la izquierda para separar del texto */
+    overflow: hidden; /* Oculta cualquier contenido que exceda el contenedor */
+}
