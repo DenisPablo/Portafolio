@@ -1,12 +1,22 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-3">
-    <div class="container-fluid">
-        <div class="navbar-collapse collapse d-sm-inline-flex">
-            <ul class="navbar-nav flex-grow-1">
+﻿<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3 silkscreen-bold">
+    <div class="container">
+        <!-- Logo o nombre -->
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-hash"></i></a>
+
+        <!-- Botón de colapso para móviles -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Contenido del menú -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">¿Quien Soy?</a>
+                    <a class="nav-link text-light asp-controller="Home" asp-action="Index">¿Quién Soy?</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Proyectos">Proyectos</a>
+                    <a class="nav-link text-light asp-controller="Home" asp-action="Proyectos">Proyectos</a>
                 </li>
             </ul>
         </div>

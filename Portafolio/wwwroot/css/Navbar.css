@@ -1,0 +1,17 @@
+﻿.navbar-nav .nav-link {
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+    .navbar-nav .nav-link:hover {
+        transform: scale(1.1);
+        color: #00ff00 !important; /* Verde brillante */
+    }
+
+.navbar-brand {
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+    .navbar-brand:hover {
+        transform: scale(1.1);
+        color: #00ff00 !important; /* Verde brillante */
+    }

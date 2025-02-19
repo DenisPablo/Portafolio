@@ -1,0 +1,16 @@
+﻿.card {
+    box-shadow: 0px 0px 5px green;
+}
+
+.imagen-codigo {
+    float: left;
+    margin-right: 10px;
+    max-width:40%;
+    height: auto;
+
+    margin-bottom: 10px;
+    border: 3px solid green;
+    border-radius:20px;
+    box-shadow: 0px 0px 5px green;
+    padding: 10px;
+}

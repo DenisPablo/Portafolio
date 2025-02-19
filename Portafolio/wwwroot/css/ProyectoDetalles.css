@@ -4,10 +4,23 @@
     max-height: 100%;
 }
 
+
 .galeria {
-    float: right; /* Flota a la derecha para que el texto la envuelva */
-    width: 800px; /* Ancho fijo para la galería */
-    height: 400px; /* Alto fijo para la galería */
-    margin-left: 20px; /* Espacio a la izquierda para separar del texto */
+    float: left; /* Flota a la izquierda para que el texto la envuelva */
+    width: 60%; /* Ancho fijo para la galería */
+    height:50%; /* Alto fijo para la galería */
+    max-width: 800px;
+    max-height: 400px;
+    margin-right: 20px; /* Espacio a la izquierda para separar del texto */
     overflow: hidden; /* Oculta cualquier contenido que exceda el contenedor */
+
+    border-radius: 12px; /* Bordes redondeados */
+    border: 0px solid darkblue;
+    background-color: darkblue;
+    padding: 10px; /* Espaciado interno */
+
+}
+
+.card {
+    box-shadow: 0px 0px 5px 1px red;
 }
