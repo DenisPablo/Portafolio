@@ -6,8 +6,11 @@ namespace Portafolio.Servicios
 {
     public interface IRepositorioUsuario
     {
+        Task<int> AñadirDescrípcion(DescripcionUsuario descripcionUsuario);
         Task<Usuario> BuscarUsuarioPorEmail(string EmailNormalizado);
         Task<int> CrearUsuario(Usuario usuario);
+        Task EditarDescripcion(DescripcionUsuario descripcionUsuario);
+        Task<DescripcionUsuario> ObtenerDescripcion(int UsuarioID);
     }
 
     /// <summary>
@@ -48,5 +51,41 @@ namespace Portafolio.Servicios
 
             return usuario;
         }
+
+        public async Task<int> AñadirDescrípcion(DescripcionUsuario descripcionUsuario) 
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            var query = @"INSERT INTO DescripcionUsuario (UsuarioID, Descripcion) VALUES (@UsuarioID, @Descripcion);
+                          SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            var id = await connection.QuerySingleAsync<int>(query, descripcionUsuario);
+
+            return id;
+        }
+
+        public async Task EditarDescripcion(DescripcionUsuario descripcionUsuario) 
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            var query = @"UPDATE DescripcionUsuario 
+                        SET Descripcion = @DescripcionUsuario
+                        WHERE DescripcionUsuarioID = @DescripcionUsuarioID AND UsuarioID = @UsuarioID;";
+
+            await connection.ExecuteAsync(query, descripcionUsuario);
+        }
+
+        public async Task<DescripcionUsuario> ObtenerDescripcion(int UsuarioID) 
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            var query = @"SELECT DescripcionUsuarioID, Descripcion, UsuarioID
+                          WHERE UsuarioID = @UsuarioID;";
+
+            var descripcionDeUsuario = await connection.QueryFirstOrDefaultAsync<DescripcionUsuario>(query, new { UsuarioID });
+
+            return descripcionDeUsuario;
+        }
+
     }
 }

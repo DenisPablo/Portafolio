@@ -13,6 +13,7 @@ namespace Portafolio.Models
         public string EmailNormalizado { get; set; }
         [Required]
         public string HashContrasena { get; set; }
+
         public bool Estado { get; set; }
     }
 }

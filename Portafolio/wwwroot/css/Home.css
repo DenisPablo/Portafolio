@@ -14,3 +14,17 @@
     box-shadow: 0px 0px 5px green;
     padding: 10px;
 }
+
+.proyecto{
+    margin-top:20px;
+    margin-left:3px;
+    border: 3px solid green;
+    border-radius: 20px;
+    box-shadow: 0px 0px 5px green;
+    padding:10px;
+}
+
+.proyecto:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}

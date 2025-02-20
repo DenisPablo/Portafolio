@@ -1,8 +1,7 @@
-﻿<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
+﻿<nav class="navbar navbar-expand-sm custom-navbar mb-3 silkscreen-bold">
     <div class="container">
         <!-- Logo o nombre -->
-        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-hash"></i></a>
-
+        <partial name="_LinksLogin" />
         <!-- Botón de colapso para móviles -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,7 +10,10 @@
 
         <!-- Contenido del menú -->
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-light" asp-area="" asp-controller="Usuario" asp-action="Crear">Descripcion</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link text-light" asp-area="" asp-controller="Categoria" asp-action="Index">Categorias</a>
                 </li>
@@ -22,7 +24,7 @@
                     <a class="nav-link text-light" asp-area="" asp-controller="Proyecto" asp-action="Index">Proyectos</a>
                 </li>
             </ul>
-            <partial name="_LinksLogin" />
+            
         </div>
     </div>
 </nav>

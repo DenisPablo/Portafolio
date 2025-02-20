@@ -1,0 +1,15 @@
+﻿@model Proyecto
+@{
+    ViewData["Title"] = "Confirmar Eliminar";
+}
+
+
+<h1>Confirmar Eliminar</h1>
+<p>¿Estas seguro de querer eliminar la categoria <strong>@Model.Titulo</strong>?</p>
+
+<form asp-action="Eliminar" method="post">
+    <input type="hidden" asp-for="ProyectoID" />
+    <input type="hidden" asp-for="Titulo" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

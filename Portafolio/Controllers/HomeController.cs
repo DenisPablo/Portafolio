@@ -24,9 +24,22 @@ namespace Portafolio.Controllers
             this.repositorioImagenProyecto = repositorioImagenProyecto;
         }
 
-        public IActionResult Index() 
+        public async Task<IActionResult> Index() 
         {
-            return View();
+            var ultimosProyectos = await repositorioProyecto.ObtenerUltimosProyectos();
+            List<ProyectoViewModel> ultimosProyectosViewModel = [];
+            IEnumerable<ImagenProyecto> imagenes = [];
+
+            foreach(var proyecto in ultimosProyectos) 
+            {
+                var tecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, proyecto.UsuarioID);
+                var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
+
+                ProyectoViewModel ultimoProyecto = new(proyecto.ProyectoID, proyecto.Titulo, proyecto.Descripcion, tecnologiasUsadas, proyecto.Antiguedad, categoria.Nombre, imagenes);
+                ultimosProyectosViewModel.Add(ultimoProyecto);
+            }
+
+            return View(ultimosProyectosViewModel);
         }
 
         public async Task<IActionResult> Proyectos()

@@ -14,6 +14,7 @@ namespace Portafolio.Servicios
         Task<IEnumerable<Proyecto>> ObtenerProyectos(int usuarioID);
         Task<Proyecto> ObtenerProyectoDetalle(int ProyectoID);
         Task<IEnumerable<Proyecto>> ObtenerProyectosVisitante();
+        Task<IEnumerable<Proyecto>> ObtenerUltimosProyectos();
     }
 
     /// <summary>
@@ -57,7 +58,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
                             FROM Proyecto 
                             WHERE UsuarioID = @UsuarioID AND Estado = 1;";
 
@@ -110,7 +111,7 @@ namespace Portafolio.Servicios
         {
             using var connecion = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, CategoriaID, UsuarioID, Estado 
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad 
                             FROM Proyecto 
                             WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
@@ -169,6 +170,21 @@ namespace Portafolio.Servicios
             var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { Titulo, UsuarioID });
 
             return existe == 1;
+        }
+
+        public async Task<IEnumerable<Proyecto>> ObtenerUltimosProyectos()
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"SELECT TOP (3) ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, CategoriaID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+                            FROM Proyecto
+                            WHERE Estado = 1;";
+
+            
+
+            var proyectos = await connection.QueryAsync<Proyecto>(query);
+
+            return proyectos;
         }
     }
 }

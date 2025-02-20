@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Portafolio.Models;
+using Portafolio.Servicios;
 
 namespace Portafolio.Controllers
 {
@@ -10,11 +11,15 @@ namespace Portafolio.Controllers
     {
         private readonly UserManager<Usuario> userManager;
         private readonly SignInManager<Usuario> signInManager;
+        private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly IServicioUsuario servicioUsuario;
 
-        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager) 
+        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, IRepositorioUsuario repositorioUsuario, IServicioUsuario servicioUsuario) 
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.repositorioUsuario = repositorioUsuario;
+            this.servicioUsuario = servicioUsuario;
         }
 
         [AllowAnonymous]
@@ -80,5 +85,41 @@ namespace Portafolio.Controllers
             ModelState.AddModelError(string.Empty, "Inicio de sesion fallido");
             return View(modelo);
         }
+
+
+        public async Task<IActionResult> Crear()
+        {
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            var descripcionUsuarioBD = repositorioUsuario.ObtenerDescripcion(UsuarioID);
+            DescripcionUsuario descripcionUsuario = new(0,"",UsuarioID);
+
+            if(descripcionUsuarioBD == null)
+            {
+               await repositorioUsuario.AñadirDescrípcion(descripcionUsuario);
+            }
+
+            return View("CrearEditar", descripcionUsuario);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear(DescripcionUsuario descripcionUsuario) 
+        {
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            descripcionUsuario.UsuarioID = UsuarioID;
+
+            await repositorioUsuario.AñadirDescrípcion(descripcionUsuario);
+
+            return RedirectToAction("Index", "Proyecto");
+        }
+
+        [HttpPost]
+        public async Task Editar(DescripcionUsuario descripcionUsuario) 
+        {
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            descripcionUsuario.UsuarioID = UsuarioID;
+
+            await repositorioUsuario.EditarDescripcion(descripcionUsuario);
+        }
+
     }
 }
