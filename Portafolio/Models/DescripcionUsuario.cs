@@ -6,11 +6,13 @@
         public string Descripcion { get; set; }
         public int UsuarioID { get; set; }
     
-        public DescripcionUsuario(int descripcionUsuarioID, string descripcion, int usuarioID)
+        public DescripcionUsuario(int descripcionUsuarioID,string descripcion, int usuarioID)
         {
             DescripcionUsuarioID = descripcionUsuarioID;
             Descripcion = descripcion;
             UsuarioID = usuarioID;
         }
+
+        public DescripcionUsuario() { }
     }
 }

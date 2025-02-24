@@ -15,20 +15,24 @@ namespace Portafolio.Controllers
         private readonly IRepositorioTecnologiaUsada repositorioTecnologiaUsada;
         private readonly IRepositorioCategoria repositorioCategoria;
         private readonly IRepositorioImagenProyecto repositorioImagenProyecto;
+        private readonly IRepositorioUsuario repositorioUsuario;
 
-        public HomeController(IRepositorioProyecto repositorioProyecto, IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IRepositorioCategoria repositorioCategoria, IRepositorioImagenProyecto repositorioImagenProyecto)
+        public HomeController(IRepositorioProyecto repositorioProyecto, IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IRepositorioCategoria repositorioCategoria, IRepositorioImagenProyecto repositorioImagenProyecto,IRepositorioUsuario repositorioUsuario)
         {
             this.repositorioProyecto = repositorioProyecto;
             this.repositorioTecnologiaUsada = repositorioTecnologiaUsada;
             this.repositorioCategoria = repositorioCategoria;
             this.repositorioImagenProyecto = repositorioImagenProyecto;
+            this.repositorioUsuario = repositorioUsuario;
         }
 
         public async Task<IActionResult> Index() 
         {
             var ultimosProyectos = await repositorioProyecto.ObtenerUltimosProyectos();
+            var descripcion = await repositorioUsuario.ObtenerDescripcionVista();
             List<ProyectoViewModel> ultimosProyectosViewModel = [];
             IEnumerable<ImagenProyecto> imagenes = [];
+
 
             foreach(var proyecto in ultimosProyectos) 
             {
@@ -39,6 +43,7 @@ namespace Portafolio.Controllers
                 ultimosProyectosViewModel.Add(ultimoProyecto);
             }
 
+            ViewBag.Descripcion = descripcion.Descripcion;
             return View(ultimosProyectosViewModel);
         }
 

@@ -11,6 +11,7 @@ namespace Portafolio.Servicios
         Task<int> CrearUsuario(Usuario usuario);
         Task EditarDescripcion(DescripcionUsuario descripcionUsuario);
         Task<DescripcionUsuario> ObtenerDescripcion(int UsuarioID);
+        Task<DescripcionUsuario> ObtenerDescripcionVista();
     }
 
     /// <summary>
@@ -69,8 +70,8 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
 
             var query = @"UPDATE DescripcionUsuario 
-                        SET Descripcion = @DescripcionUsuario
-                        WHERE DescripcionUsuarioID = @DescripcionUsuarioID AND UsuarioID = @UsuarioID;";
+                        SET Descripcion = @Descripcion
+                        WHERE UsuarioID = @UsuarioID;";
 
             await connection.ExecuteAsync(query, descripcionUsuario);
         }
@@ -80,9 +81,22 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
 
             var query = @"SELECT DescripcionUsuarioID, Descripcion, UsuarioID
-                          WHERE UsuarioID = @UsuarioID;";
+                        FROM DescripcionUsuario
+                        WHERE UsuarioID = @UsuarioID;";
 
             var descripcionDeUsuario = await connection.QueryFirstOrDefaultAsync<DescripcionUsuario>(query, new { UsuarioID });
+
+            return descripcionDeUsuario;
+        }
+
+        public async Task<DescripcionUsuario> ObtenerDescripcionVista()
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            var query = @"SELECT DescripcionUsuarioID, Descripcion, UsuarioID
+                        FROM DescripcionUsuario";
+
+            var descripcionDeUsuario = await connection.QueryFirstOrDefaultAsync<DescripcionUsuario>(query);
 
             return descripcionDeUsuario;
         }

@@ -1,0 +1,33 @@
+﻿<div class="advertencia">
+    <h5><strong>¡IMPORTANTE!</strong> El nuevo CV <strong>REMPLAZARA DEFINITIVAMENTE</strong> al actual.</h5>
+</div>
+
+<form asp-controller="Cv" asp-action="Subir" method="post" enctype="multipart/form-data">
+
+    <div>
+        <input class="form-control form-control-lg" id="formFileLg" type="file" name="file" accept=".pdf" required />
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <div id="guardar" class="m-2">
+            <button onclick="confirmar()" type="button" class="btn btn-primary">
+                Subir
+            </button>
+            <a asp-action="Index" asp-controller="Proyecto" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </div>
+
+    <div id="confirmar" class="mb-3 confirmar alert-danger text-center">
+        <p>¿Esta seguro que desea realizar esta accion?</p>
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+        <a asp-action="Index" asp-controller="Proyecto" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Subir.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/ConfirmarEnvio.js"></script>
+}

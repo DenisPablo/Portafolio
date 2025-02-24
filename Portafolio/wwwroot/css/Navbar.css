@@ -24,7 +24,23 @@
     margin-right: 3px;
 }
 
-.btn {
-    margin-left:2px;
-    margin-right:2px;
+.btn-custom {
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    padding:5px;
+    background-color: rgba(0, 255, 0, 0.2); /* Fondo semitransparente */
+    text-align:center;
 }
+
+.navbar-toggler {
+    background-color: rgba(0, 255, 0, 0.2); /* Fondo semitransparente */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Borde blanco tenue */
+    transition: background-color 0.3s ease-in-out;
+    margin-bottom:2px;
+}
+
+.navbar-toggler:hover {
+        background-color: rgba(255, 255, 255, 0.4); /* Fondo más visible al pasar el mouse */
+}
+

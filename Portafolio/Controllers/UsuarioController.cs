@@ -90,15 +90,17 @@ namespace Portafolio.Controllers
         public async Task<IActionResult> Crear()
         {
             var UsuarioID = servicioUsuario.ObtenerUsuarioId();
-            var descripcionUsuarioBD = repositorioUsuario.ObtenerDescripcion(UsuarioID);
+            var descripcionUsuarioBD = await repositorioUsuario.ObtenerDescripcion(UsuarioID);
             DescripcionUsuario descripcionUsuario = new(0,"",UsuarioID);
 
-            if(descripcionUsuarioBD == null)
+            if (descripcionUsuarioBD == null)
             {
-               await repositorioUsuario.AñadirDescrípcion(descripcionUsuario);
+                await repositorioUsuario.AñadirDescrípcion(descripcionUsuario);
+                return View("CrearEditar", descripcionUsuario);
             }
+ 
+            return View("CrearEditar", descripcionUsuarioBD);
 
-            return View("CrearEditar", descripcionUsuario);
         }
 
         [HttpPost]
@@ -113,12 +115,14 @@ namespace Portafolio.Controllers
         }
 
         [HttpPost]
-        public async Task Editar(DescripcionUsuario descripcionUsuario) 
+        public async Task<IActionResult> Editar(DescripcionUsuario descripcionUsuario) 
         {
             var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             descripcionUsuario.UsuarioID = UsuarioID;
 
             await repositorioUsuario.EditarDescripcion(descripcionUsuario);
+
+            return RedirectToAction("Index", "Proyecto");
         }
 
     }
