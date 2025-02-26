@@ -1,46 +1,40 @@
 ﻿@model List<ProyectoViewModel>
 
+
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row">
         @foreach (var proyecto in Model)
         {
-            <div class="col-md-10 col-lg-8">
+            <div class="col-3 mt-3">
+                <!-- Control de tamaño en diferentes pantallas -->
                 <div class="card bg-dark text-white mt-3">
-                    <div class="card-body d-flex flex-column flex-md-row">
+                    <div class="card-title text-center mt-2">
+                        <h5>@proyecto.Titulo</h5>
+                    </div>
 
-                        <!-- Imagen -->
-                        <div class="col-md-4 img mb-3 mb-md-0">
-                            <img class="img-thumbnail mx-auto d-block"
-                                 src="~/Imagenes/web-design-3411373_640.jpg"
-                                 alt="Miniatura del proyecto" />
-                            <div class="mt-3">
-                                <p>
-                                    <strong class="text-success">Tecnologías:</strong>
-                                    @string.Join(", ", proyecto.Tecnologias.Select(t => t.Nombre))
-                                </p>
-                                <p><strong class="text-success">Antigüedad:</strong> @proyecto.Antiguedad meses</p>
-                                <p><strong class="text-success">Categoría:</strong> @proyecto.Categoria</p>
-                            </div>
-                        </div>
+                    <div class="card-img text-center">
+                        <img class="img-thumbnail mx-auto d-block"
+                             src="~/Imagenes/web-design-3411373_640.jpg"
+                             alt="Miniatura del proyecto" />
+                    </div>
 
-                        <!-- Descripción -->
-                        <div class="col-md-8 d-flex flex-column">
-                            <h5 class="text-center">@proyecto.Titulo</h5>
-                            <p class="flex-grow-1 text-wrap">
-                                @Html.Raw(proyecto.Descripcion[..Math.Min(500, proyecto.Descripcion.Length)])
-                                @if (proyecto.Descripcion.Length > 500)
-                                {
-                                    <span>...</span>
-                                }
-                            </p>
-                            <a class="btn btn-outline-success align-self-end mt-2"
-                               asp-controller="Proyectos"
-                               asp-action="Detalles"
-                               asp-route-id="@proyecto.ProyectoID">
-                                Ver detalles
-                            </a>
-                        </div>
+                    <div class="card-header">
+                        <p><strong class="text-success">Tecnologías:</strong> @string.Join(", ", proyecto.Tecnologias.Select(t => t.Nombre))</p>
+                        <p><strong class="text-success">Antigüedad:</strong> @proyecto.Antiguedad meses</p>
+                        <p><strong class="text-success">Categoría:</strong> @proyecto.Categoria</p>
+                    </div>
 
+                    <div class="card-body">
+                        @Html.Raw(proyecto.Descripcion)
+                    </div>
+
+                    <div class="card-footer">
+                        <a class="btn btn-outline-success"
+                           asp-controller="Proyectos"
+                           asp-action="Detalles"
+                           asp-route-id="@proyecto.ProyectoID">
+                            Ver detalles
+                        </a>
                     </div>
                 </div>
             </div>
@@ -48,6 +42,9 @@
     </div>
 </div>
 
+
+
 @section Styles {
     <link rel="stylesheet" href="~/css/Proyectos.css" asp-append-version="true" />
 }
+

@@ -16,14 +16,16 @@ namespace Portafolio.Controllers
         private readonly IRepositorioCategoria repositorioCategoria;
         private readonly IRepositorioImagenProyecto repositorioImagenProyecto;
         private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly IHtmlHelper htmlHelper;
 
-        public HomeController(IRepositorioProyecto repositorioProyecto, IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IRepositorioCategoria repositorioCategoria, IRepositorioImagenProyecto repositorioImagenProyecto,IRepositorioUsuario repositorioUsuario)
+        public HomeController(IRepositorioProyecto repositorioProyecto, IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IRepositorioCategoria repositorioCategoria, IRepositorioImagenProyecto repositorioImagenProyecto,IRepositorioUsuario repositorioUsuario, IHtmlHelper htmlHelper)
         {
             this.repositorioProyecto = repositorioProyecto;
             this.repositorioTecnologiaUsada = repositorioTecnologiaUsada;
             this.repositorioCategoria = repositorioCategoria;
             this.repositorioImagenProyecto = repositorioImagenProyecto;
             this.repositorioUsuario = repositorioUsuario;
+            this.htmlHelper = htmlHelper;
         }
 
         public async Task<IActionResult> Index() 
@@ -55,11 +57,12 @@ namespace Portafolio.Controllers
             foreach (var proyecto in proyectos)
             {
                 IEnumerable<Tecnologia> tecnologias = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, proyecto.UsuarioID);
-                
+                var DescripcionResumida = htmlHelper.TruncateHtml(proyecto.Descripcion, 500);
+
                 var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
                 IEnumerable<ImagenProyecto> Imagenes = [];
 
-                ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID,proyecto.Titulo, proyecto.Descripcion, tecnologias, proyecto.Antiguedad, categoria.Nombre, Imagenes);
+                ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID,proyecto.Titulo, DescripcionResumida, tecnologias, proyecto.Antiguedad, categoria.Nombre, Imagenes);
 
                 proyectosViewModel.Add(proyectoViewModel);
               

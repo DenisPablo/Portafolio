@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Portafolio.Controllers
 {
@@ -56,7 +57,8 @@ namespace Portafolio.Controllers
             return View();
         }
 
-        public IActionResult Download()
+        [AllowAnonymous]
+        public IActionResult Cv()
         {
             var carpeta = Path.Combine(_env.WebRootPath, "cv");
             var filePath = Directory.GetFiles(carpeta, "*.pdf").FirstOrDefault(); // Obtiene el primer PDF en la carpeta

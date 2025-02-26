@@ -2,6 +2,21 @@
     <h5><strong>¡IMPORTANTE!</strong> El nuevo CV <strong>REMPLAZARA DEFINITIVAMENTE</strong> al actual.</h5>
 </div>
 
+@if (ViewBag.Error != null)
+{
+    <div class="error">
+        <p>¡ERROR! @ViewBag.Error</p>
+    </div>
+}
+
+
+@if (ViewBag.Success != null)
+{
+    <div class="success">
+        <p>¡Exito! @ViewBag.Success</p>
+    </div>
+}
+
 <form asp-controller="Cv" asp-action="Subir" method="post" enctype="multipart/form-data">
 
     <div>

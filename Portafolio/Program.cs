@@ -28,6 +28,8 @@ builder.Services.AddTransient<ICloudinaryService, CloudinaryService>();
 builder.Services.AddTransient<IProyectoUtilidades, ProyectoUtilidades>();
 builder.Services.AddTransient<IRepositorioTecnologiaUsada, RepositorioTecnologiaUsada>();
 
+builder.Services.AddScoped<IHtmlHelper, HtmlHelper>();
+
 builder.Services.AddScoped<IUserStore<Usuario>, UsuarioStore>();
 builder.Services.AddIdentityCore<Usuario>().AddErrorDescriber<MensajesDeErrorIdentity>();
 

@@ -1,13 +1,24 @@
 ﻿.card {
     box-shadow: 0px 0px 5px 1px green;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; /* Asegurar altura uniforme */
 }
 
-.card:hover {
+    .card:hover {
         transform: scale(1.02);
         box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    }
+
+.card-body {
+    flex-grow: 1; /* Hace que el cuerpo crezca y empuje el footer hacia abajo */
 }
 
-.img {
-    margin-right: 5px;
-    margin-bottom: 5px;
+.card-footer {
+    margin-top: auto; /* Mantiene el botón en la parte inferior */
+}
+
+.card-img img {
+    max-width: 100%; /* Evita que la imagen se desborde */
+    height: auto;
 }

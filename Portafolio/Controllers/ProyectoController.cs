@@ -12,7 +12,6 @@ namespace Portafolio.Controllers
     public class ProyectoController : Controller
     {
         private readonly IRepositorioProyecto repositorioProyecto;
-        private readonly IRepositorioUsuario repositorioUsuario;
         private readonly ICloudinaryService cloudinaryService;
         private readonly IRepositorioImagenProyecto repositorioImagenProyecto;
         private readonly IProyectoUtilidades proyectoUtilidades;

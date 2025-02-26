@@ -6,3 +6,23 @@
     padding:20px;
     margin-bottom:20px;
 }
+
+.error {
+    padding:20px;
+    background-color: red;
+    color: white;
+    border-radius:10px;
+    text-align:center;
+    font-size: 20px;
+    margin-bottom:5px;
+}
+
+.success {
+    padding: 20px;
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+    text-align:center;
+    font-size: 20px;
+    margin-bottom:5px;
+}
