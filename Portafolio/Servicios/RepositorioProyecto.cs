@@ -17,10 +17,6 @@ namespace Portafolio.Servicios
         Task<IEnumerable<Proyecto>> ObtenerUltimosProyectos();
     }
 
-    /// <summary>
-    /// Esta clase contiene los metodos necesarios para administrar los Proyectos en la base de datos
-    /// </summary>
-
     public class RepositorioProyecto : IRepositorioProyecto {
 
         private readonly string connectionString;
@@ -29,7 +25,6 @@ namespace Portafolio.Servicios
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
-
         /// <summary>
         /// Se conecta a la base de datos y crea un nuevo Proyecto
         /// </summary>
@@ -46,9 +41,6 @@ namespace Portafolio.Servicios
             var id = await connection.QuerySingleAsync<int>(query, proyecto);
             return id;
         }
-
-
-
         /// <summary>
         /// Obtiene los proyectos de un usuario de la base de datos.
         /// </summary>
@@ -60,7 +52,8 @@ namespace Portafolio.Servicios
 
             string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
                             FROM Proyecto 
-                            WHERE UsuarioID = @UsuarioID AND Estado = 1;";
+                            WHERE UsuarioID = @UsuarioID AND Estado = 1
+                            ORDER BY FechaPubli DESC;";
 
             var proyectos = await connection.QueryAsync<Proyecto>(query, new { UsuarioID });
             
@@ -82,11 +75,9 @@ namespace Portafolio.Servicios
 
             return proyectos;
         }
-
         /// <summary>
-        /// Obtiene los proyectos de un usuario de la base de datos.
+        /// Obtiene todos los proyectos en la base de datos.
         /// </summary>
-        /// <param name="usuarioID">Identifica al propietario de los proyectos</param>
         /// <returns>Enumerable de proyectos</returns>
         public async Task<IEnumerable<Proyecto>> ObtenerProyectosVisitante()
         {
@@ -94,13 +85,13 @@ namespace Portafolio.Servicios
 
             string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
                             FROM Proyecto 
-                            WHERE Estado = 1;";
+                            WHERE Estado = 1
+                            ORDER BY FechaPubli DESC;";
 
             var proyectos = await connection.QueryAsync<Proyecto>(query);
 
             return proyectos;
         }
-
         /// <summary>
         /// Busca un proyecto en específico por su ID.
         /// </summary>
@@ -111,7 +102,7 @@ namespace Portafolio.Servicios
         {
             using var connecion = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad 
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion,CategoriaID, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad 
                             FROM Proyecto 
                             WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
@@ -136,7 +127,6 @@ namespace Portafolio.Servicios
             await connection.ExecuteAsync(query, new { ProyectoID, UsuarioID });
 
         }
-
         /// <summary>
         /// Permite realizar ediciones sobre los proyectos existentes.
         /// </summary>
@@ -152,7 +142,6 @@ namespace Portafolio.Servicios
 
             await connection.ExecuteAsync(query, proyecto);
         }
-
         /// <summary>
         /// Verifica si un proyecto con un nombre específico ya existe para un usuario.
         /// </summary>
@@ -171,14 +160,18 @@ namespace Portafolio.Servicios
 
             return existe == 1;
         }
-
+        /// <summary>
+        /// Obtiene los ultimos 3 proyectos de la base de datos
+        /// </summary>
+        /// <returns>IEnumerable de Proyectos</returns>
         public async Task<IEnumerable<Proyecto>> ObtenerUltimosProyectos()
         {
             using var connection = new SqlConnection(connectionString);
 
             string query = @"SELECT TOP (3) ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, CategoriaID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
                             FROM Proyecto
-                            WHERE Estado = 1;";
+                            WHERE Estado = 1
+                            ORDER BY FechaPubli DESC;";
 
             
 

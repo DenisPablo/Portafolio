@@ -156,5 +156,56 @@ namespace Portafolio.Controllers
 
             return Json(true);
         }
+
+        /// <summary>
+        /// Muestra una v
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Papelera()
+        {
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            IEnumerable<Categoria> categorias = await repositorioCategoria.ObtenerCategoriasInactivas(UsuarioID);
+
+            return View(categorias);
+        }
+
+        /// <summary>
+        /// Muestra una vista de confirmación para eliminar una categoría.
+        /// </summary>
+        /// <param name="CategoriaID">Identificador de la categoría a eliminar.</param>
+        /// <returns>Una vista de confirmación si la categoría existe, o una vista de error si no se encuentra.</returns>
+        public async Task<IActionResult> ConfirmarRestaurar(int CategoriaID)
+        {
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            Categoria categoria = await repositorioCategoria.ObtenerCategoriasPorID(CategoriaID, UsuarioID);
+
+            if (categoria == null)
+            {
+                return View("Error404");
+            }
+
+            return View("_Partials/_ConfirmarRestaurar", categoria);
+        }
+
+        /// <summary>
+        /// Restaura una categoría del sistema.
+        /// </summary>
+        /// <param name="CategoriaID">Identificador de la categoría a eliminar.</param>
+        /// <returns>Redirige a la lista de categorías si la eliminación es exitosa, o a una vista de error si no se encuentra.</returns>
+        [HttpPost]
+        public async Task<IActionResult> Restaurar(int CategoriaID)
+        {
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            Categoria categoria = await repositorioCategoria.ObtenerCategoriasPorID(CategoriaID, UsuarioID);
+
+            if (categoria == null)
+            {
+                return View("Error404");
+            }
+
+            await repositorioCategoria.RestaurarCategoria(CategoriaID, UsuarioID);
+
+            return RedirectToAction("Index");
+        }
     }
 }

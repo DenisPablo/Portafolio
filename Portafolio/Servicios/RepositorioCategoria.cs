@@ -13,12 +13,10 @@ namespace Portafolio.Servicios
         Task EliminarCategoria(int CategoriaID, int UsuarioID);
         Task<bool> ExisteCategoria(string nombre, int UsuarioID);
         Task<IEnumerable<Categoria>> ObtenerCategoriasActivas(int id);
+        Task<IEnumerable<Categoria>> ObtenerCategoriasInactivas(int UsuarioID);
         Task<Categoria> ObtenerCategoriasPorID(int CategoriaID, int UsuarioID);
+        Task RestaurarCategoria(int CategoriaID, int UsuarioID);
     }
-
-    /// <summary>
-    /// Esta clase repositorio contiene los metodos necesarios para administrar un categoria interactuando con la base de datos.
-    /// </summary>
 
     public class RepositorioCategoria : IRepositorioCategoria
     {
@@ -46,7 +44,7 @@ namespace Portafolio.Servicios
         }
 
         /// <summary>
-        /// Obtiene todas las categorias de la base datos que le pertenecen a un usuario.
+        /// Obtiene todas las categorias activas de la base datos que le pertenecen a un usuario.
         /// </summary>
         /// <param name="UsuarioID">Identifica al propietario de las categorias</param>
         /// <returns>IEnumerable de las categorias obtenidas</returns>
@@ -60,9 +58,8 @@ namespace Portafolio.Servicios
             var categorias = await connection.QueryAsync<Categoria>(query, new { UsuarioID });
             return categorias;
         }
-
         /// <summary>
-        /// Obtiene todas las categorias de la base datos que le pertenecen a un usuario.
+        /// Obtiene todas las categorias inactivas de la base datos que le pertenecen a un usuario.
         /// </summary>
         /// <param name="UsuarioID">Identifica al propietario de las categorias</param>
         /// <returns>IEnumerable de las categorias obtenidas</returns>
@@ -76,7 +73,6 @@ namespace Portafolio.Servicios
             var categorias = await connection.QueryAsync<Categoria>(query, new { UsuarioID });
             return categorias;
         }
-
         /// <summary>
         /// Busca una categoria en especifico identificandola con el ID.
         /// </summary>
@@ -93,7 +89,6 @@ namespace Portafolio.Servicios
             var categoria = await connection.QueryFirstOrDefaultAsync<Categoria>(query, new { CategoriaID, UsuarioID });
             return categoria;
         }
-
         /// <summary>
         /// Marca una categoria como deshabilitada (borrado logico).
         /// </summary>
@@ -109,7 +104,21 @@ namespace Portafolio.Servicios
 
             await connection.ExecuteAsync(query, new { CategoriaID, UsuarioID });
         }
+        /// <summary>
+        /// Marca una categoria como habilitada.
+        /// </summary>
+        /// <param name="CategoriaID">identifica la categoria a habilitar</param>
+        /// <param name="UsuarioID">identifica al propietario de la categoria</param>
+        /// <returns></returns>
+        public async Task RestaurarCategoria(int CategoriaID, int UsuarioID)
+        {
+            using var connection = new SqlConnection(connectionString);
+            string query = @"UPDATE Categoria 
+                            SET Estado = 1 
+                            WHERE CategoriaID = @CategoriaID AND UsuarioID = @UsuarioID AND Estado = 0;";
 
+            await connection.ExecuteAsync(query, new { CategoriaID, UsuarioID });
+        }
         /// <summary>
         /// Permite realizar ediciones sobre las categorias ya existentes.
         /// </summary>
@@ -125,7 +134,6 @@ namespace Portafolio.Servicios
 
             await connection.ExecuteAsync(query, categoria);
         }
-
         /// <summary>
         /// Valida si existe una categoria buscado por nombre, interactua con una validacion en el frontend [Remote]
         /// </summary>

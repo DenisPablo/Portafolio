@@ -19,7 +19,11 @@ namespace Portafolio.Servicios
         public RepositorioImagenProyecto(IConfiguration configuration) {
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
-
+        /// <summary>
+        /// Guarda la URL de una imagen en la base de datos
+        /// </summary>
+        /// <param name="imagenProyecto"></param>
+        /// <returns></returns>
         public async Task<int> Crear(ImagenProyecto imagenProyecto)
         {
             using var connection = new SqlConnection(connectionString);
@@ -30,7 +34,12 @@ namespace Portafolio.Servicios
             var id = await connection.QuerySingleAsync<int>(query, imagenProyecto);
             return id;
         }
-
+        /// <summary>
+        /// devuelve todas las url de imagenes asociadas a un proyecto
+        /// </summary>
+        /// <param name="ProyectoID"></param>
+        /// <param name="UsuarioID"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<ImagenProyecto>> ObtenerImagenesProyecto(int ProyectoID, int UsuarioID) 
         {
             using var connection = new SqlConnection(connectionString);
@@ -41,7 +50,12 @@ namespace Portafolio.Servicios
             var imagenesProyecto = await connection.QueryAsync<ImagenProyecto>(query, new { ProyectoID, UsuarioID });
             return imagenesProyecto;
         }
-
+        /// <summary>
+        /// Elimina la url de una imagen en la base de datos
+        /// </summary>
+        /// <param name="PublicID"></param>
+        /// <param name="UsuarioID"></param>
+        /// <returns></returns>
         public async Task EliminarImagenProyecto(string PublicID, int UsuarioID) 
         {
             using var connection = new SqlConnection(connectionString);

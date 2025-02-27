@@ -55,7 +55,7 @@ namespace Portafolio.Controllers
                 Proyecto proyecto = new Proyecto();
                 var UsuarioID = servicioUsuario.ObtenerUsuarioId();
                 var categorias = await repositorioCategoria.ObtenerCategoriasActivas(UsuarioID);
-                var tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
+                var tecnologias = await repositorioTecnologia.ObtenerTecnologiasActivas(UsuarioID);
                 
                 ViewBag.Tecnologias = tecnologias;
                 ViewBag.TecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, UsuarioID);
@@ -112,7 +112,7 @@ namespace Portafolio.Controllers
                 return View("Error404");
             }
 
-            ViewBag.Tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
+            ViewBag.Tecnologias = await repositorioTecnologia.ObtenerTecnologiasActivas(UsuarioID);
             ViewBag.TecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(ProyectoID, UsuarioID);
             ViewBag.Categorias = new SelectList(categorias, "CategoriaID", "Nombre", categoriaSeleccionada);
             ViewBag.Imagenes = await repositorioImagenProyecto.ObtenerImagenesProyecto(ProyectoID, UsuarioID);

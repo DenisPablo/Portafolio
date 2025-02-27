@@ -22,7 +22,13 @@ namespace Portafolio.Servicios
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
-
+        /// <summary>
+        /// Crea una asociacion entre un proyecto y una tecnologia en la base de datos.
+        /// </summary>
+        /// <param name="ProyectoID"></param>
+        /// <param name="TecnologiaID"></param>
+        /// <param name="UsuarioID"></param>
+        /// <returns></returns>
         public async Task<int> Crear(int ProyectoID, int TecnologiaID, int UsuarioID)
         {
 
@@ -35,7 +41,12 @@ namespace Portafolio.Servicios
             var id = await connection.QuerySingleAsync<int>(query, new { ProyectoID, TecnologiaID, UsuarioID });
             return id;
         }
-
+        /// <summary>
+        /// Devuelve todos las tecnologias asociadas a un proyecto
+        /// </summary>
+        /// <param name="ProyectoID"></param>
+        /// <param name="UsuarioID"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyecto(int ProyectoID, int UsuarioID) 
         {
             using var connection = new SqlConnection(connectionString);
@@ -47,7 +58,11 @@ namespace Portafolio.Servicios
             var tecnologias = await connection.QueryAsync<Tecnologia>(query, new { ProyectoID, UsuarioID });
             return tecnologias;
         }
-
+        /// <summary>
+        /// Obtiene todas las tecnologias relacionadas a un proyecto
+        /// </summary>
+        /// <param name="ProyectoID"></param>
+        /// <returns>IEnumerable de Tecnologias</returns>
         public async Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyectoDetalles(int ProyectoID)
         {
             using var connection = new SqlConnection(connectionString);
@@ -59,7 +74,13 @@ namespace Portafolio.Servicios
             var tecnologias = await connection.QueryAsync<Tecnologia>(query, new { ProyectoID });
             return tecnologias;
         }
-
+        /// <summary>
+        /// Borra la asociacion entre una tecnologia y un proyecto
+        /// </summary>
+        /// <param name="TecnologiaID"></param>
+        /// <param name="ProyectoID"></param>
+        /// <param name="UsuarioID"></param>
+        /// <returns></returns>
         public async Task EliminarTecnologia(int TecnologiaID,int ProyectoID, int UsuarioID) {
             using var connection = new SqlConnection(connectionString);
 
@@ -67,7 +88,5 @@ namespace Portafolio.Servicios
 
             await connection.ExecuteAsync("EliminarTecnologiaUsada", parametros, commandType: CommandType.StoredProcedure);
         }
-
-
     }
 }

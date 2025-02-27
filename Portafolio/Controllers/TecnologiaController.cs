@@ -25,7 +25,7 @@ namespace Portafolio.Controllers
         public async Task<IActionResult> Index()
         {
             var UsuarioID = servicioUsuario.ObtenerUsuarioId();
-            var tecnologias = await repositorioTecnologia.ObtenerTecnologias(UsuarioID);
+            var tecnologias = await repositorioTecnologia.ObtenerTecnologiasActivas(UsuarioID);
 
             return View(tecnologias);
         }

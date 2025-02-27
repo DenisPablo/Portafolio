@@ -10,13 +10,11 @@ namespace Portafolio.Servicios
         Task EditarTecnologia(Tecnologia tecnologia);
         Task EliminarTecnologia(int CategoriaID, int UsuarioID);
         Task<bool> ExisteTecnologia(string nombre, int UsuarioID);
-        Task<IEnumerable<Tecnologia>> ObtenerTecnologias(int UsuarioID);
+        Task<IEnumerable<Tecnologia>> ObtenerTecnologiasActivas(int UsuarioID);
+        Task<IEnumerable<Tecnologia>> ObtenerTecnologiasInactivas(int UsuarioID);
         Task<Tecnologia> ObtenerTecnologiasPorID(int TecnologiaID, int UsuarioID);
     }
 
-    /// <summary>
-    /// Esta clase contiene los metodos necesarios para administrar una tecnologia en la base de datos
-    /// </summary>
     public class RepositorioTecnologia : IRepositorioTecnologia
     {
 
@@ -42,13 +40,12 @@ namespace Portafolio.Servicios
             var id = await connection.QuerySingleAsync<int>(query, tecnologia);
             return id;
         }
-
         /// <summary>
-        /// Obtiene todas las categorias de la base de datos que le pertenezcan al usuario activo.
+        /// Obtiene todas las tecnologias activas de la base de datos que le pertenezcan al usuario activo.
         /// </summary>
         /// <param name="UsuarioID">identificador del usuario</param>
         /// <returns>IEnumerable de tecnologias</returns>
-        public async Task<IEnumerable<Tecnologia>> ObtenerTecnologias(int UsuarioID)
+        public async Task<IEnumerable<Tecnologia>> ObtenerTecnologiasActivas(int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -60,7 +57,23 @@ namespace Portafolio.Servicios
 
             return tecnologias;
         }
+        /// <summary>
+        /// Obtiene todas las tecnologias activas de la base de datos que le pertenezcan al usuario activo.
+        /// </summary>
+        /// <param name="UsuarioID">identificador del usuario</param>
+        /// <returns>IEnumerable de tecnologias</returns>
+        public async Task<IEnumerable<Tecnologia>> ObtenerTecnologiasInactivas(int UsuarioID)
+        {
+            using var connection = new SqlConnection(connectionString);
 
+            string query = @"SELECT TecnologiaID, Nombre, UsuarioID, Estado 
+                            FROM Tecnologia
+                            WHERE UsuarioID = @UsuarioID AND Estado = 1;";
+
+            var tecnologias = await connection.QueryAsync<Tecnologia>(query, new { UsuarioID });
+
+            return tecnologias;
+        }
         /// <summary>
         /// Busca una tecnologia por un identificador. NOTA: Debe pertenecer al usuario
         /// </summary>
@@ -78,11 +91,10 @@ namespace Portafolio.Servicios
             var tecnologia = await connection.QueryFirstOrDefaultAsync<Tecnologia>(query, new { TecnologiaID, UsuarioID });
             return tecnologia;
         }
-
         /// <summary>
         /// Marca como deshabilitada una tecnologia (borrado logico)
         /// </summary>
-        /// <param name="CategoriaID">identificador de la categoria</param>
+        /// <param name="TecnologiaID">identificador de la tecnologia</param>
         /// <param name="UsuarioID">indentificador del usuario propietario</param>
         /// <returns></returns>
         public async Task EliminarTecnologia(int TecnologiaID, int UsuarioID)
@@ -95,8 +107,6 @@ namespace Portafolio.Servicios
 
             await connection.ExecuteAsync(query, new { TecnologiaID, UsuarioID });
         }
-
-
         /// <summary>
         /// Permite modificar una tecnologia ya existente.
         /// </summary>
@@ -112,7 +122,6 @@ namespace Portafolio.Servicios
 
             await connection.ExecuteAsync(query, tecnologia);  
         }
-
         /// <summary>
         /// Verifica si una tecnología con un nombre específico ya existe para un usuario.
         /// </summary>
