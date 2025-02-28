@@ -158,7 +158,7 @@ namespace Portafolio.Controllers
         }
 
         /// <summary>
-        /// Muestra una v
+        /// Muestra una vista de la papelera de reciclaje
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> Papelera()

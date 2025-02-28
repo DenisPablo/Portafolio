@@ -42,7 +42,7 @@ namespace Portafolio.Controllers
         public async Task<IActionResult> Index()
         {
             int UsuarioID = servicioUsuario.ObtenerUsuarioId();
-            IEnumerable<Proyecto> proyectos = await repositorioProyecto.ObtenerProyectos(UsuarioID);
+            IEnumerable<Proyecto> proyectos = await repositorioProyecto.ObtenerProyectosActivos(UsuarioID);
             return View(proyectos);
         }
 
@@ -191,6 +191,53 @@ namespace Portafolio.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> Papelera()
+        {
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            IEnumerable<Proyecto> proyectos = await repositorioProyecto.ObtenerProyectosInactivos(UsuarioID);
+
+            return View(proyectos);
+        }
+
+        /// <summary>
+        /// Muestra una vista de confirmación para restaurar un proyecto.
+        /// </summary>
+        /// <param name="ProyectoID">Identificador de la categoría a eliminar.</param>
+        /// <returns>Una vista de confirmación si la categoría existe, o una vista de error si no se encuentra.</returns>
+        public async Task<IActionResult> ConfirmarRestaurar(int ProyectoID)
+        {
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            var proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID);
+
+            if (proyecto == null)
+            {
+                return View("Error404");
+            }
+
+            return View("_Partials/_ConfirmarRestaurar", proyecto);
+        }
+
+        /// <summary>
+        /// Restaura un Proyecto.
+        /// </summary>
+        /// <param name="ProyectoID">Identificador del Proyecto a Restaurar.</param>
+        /// <returns>Redirige a la lista de categorías si la eliminación es exitosa, o a una vista de error si no se encuentra.</returns>
+        [HttpPost]
+        public async Task<IActionResult> Restaurar(int ProyectoID)
+        {
+            int UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            var proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID);
+
+            if (proyecto == null)
+            {
+                return View("Error404");
+            }
+
+            await repositorioProyecto.RestaurarProyecto(ProyectoID, UsuarioID);
+
+            return RedirectToAction("Index");
+        }
+
         /// <summary>
         /// Elimina una imagen del servicio de cloudnary y de la base de datos
         /// </summary>
@@ -335,5 +382,6 @@ namespace Portafolio.Controllers
                 await repositorioTecnologiaUsada.EliminarTecnologia(tecnologia.TecnologiaID, ProyectoID, UsuarioID);
             }
         }
+
     }
 }

@@ -11,10 +11,12 @@ namespace Portafolio.Servicios
         Task EliminarProyecto(int ProyectoID, int UsuarioID);
         Task<bool> ExisteProyecto(string Titulo, int UsuarioID);
         Task<Proyecto> ObtenerProyectoPorID(int ProyectoID, int UsuarioID);
-        Task<IEnumerable<Proyecto>> ObtenerProyectos(int usuarioID);
+        Task<IEnumerable<Proyecto>> ObtenerProyectosActivos(int usuarioID);
         Task<Proyecto> ObtenerProyectoDetalle(int ProyectoID);
         Task<IEnumerable<Proyecto>> ObtenerProyectosVisitante();
         Task<IEnumerable<Proyecto>> ObtenerUltimosProyectos();
+        Task<IEnumerable<Proyecto>> ObtenerProyectosInactivos(int UsuarioID);
+        Task RestaurarProyecto(int ProyectoID, int UsuarioID);
     }
 
     public class RepositorioProyecto : IRepositorioProyecto {
@@ -42,11 +44,11 @@ namespace Portafolio.Servicios
             return id;
         }
         /// <summary>
-        /// Obtiene los proyectos de un usuario de la base de datos.
+        /// Obtiene los proyectos activos de un usuario de la base de datos.
         /// </summary>
         /// <param name="usuarioID">Identifica al propietario de los proyectos</param>
         /// <returns>Enumerable de proyectos</returns>
-        public async Task<IEnumerable<Proyecto>> ObtenerProyectos(int UsuarioID) 
+        public async Task<IEnumerable<Proyecto>> ObtenerProyectosActivos(int UsuarioID) 
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -57,6 +59,24 @@ namespace Portafolio.Servicios
 
             var proyectos = await connection.QueryAsync<Proyecto>(query, new { UsuarioID });
             
+            return proyectos;
+        }
+        /// <summary>
+        /// Obtiene los proyectos inactivos un usuario de la base de datos.
+        /// </summary>
+        /// <param name="usuarioID">Identifica al propietario de los proyectos</param>
+        /// <returns>Enumerable de proyectos</returns>
+        public async Task<IEnumerable<Proyecto>> ObtenerProyectosInactivos(int UsuarioID)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+                            FROM Proyecto 
+                            WHERE UsuarioID = @UsuarioID AND Estado = 0
+                            ORDER BY FechaPubli DESC;";
+
+            var proyectos = await connection.QueryAsync<Proyecto>(query, new { UsuarioID });
+
             return proyectos;
         }
         /// <summary>
@@ -104,10 +124,28 @@ namespace Portafolio.Servicios
 
             string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion,CategoriaID, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad 
                             FROM Proyecto 
-                            WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID AND Estado = 1;";
+                            WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID;";
 
             var proyecto = await connecion.QueryFirstOrDefaultAsync<Proyecto>(query, new { ProyectoID, UsuarioID });
             return proyecto;
+        }
+
+        /// <summary>
+        /// Marca un proyecto como deshabilitado (borrado lógico).
+        /// </summary>
+        /// <param name="ProyectoID">Identifica el proyecto a deshabilitar.</param>
+        /// <param name="UsuarioID">Identifica al propietario del proyecto.</param>
+        /// <returns>Una tarea que representa la operación asíncrona.</returns>
+        public async Task RestaurarProyecto(int ProyectoID, int UsuarioID)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"UPDATE Proyecto 
+                            SET Estado = 1
+                            WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID;";
+
+            await connection.ExecuteAsync(query, new { ProyectoID, UsuarioID });
+
         }
 
         /// <summary>

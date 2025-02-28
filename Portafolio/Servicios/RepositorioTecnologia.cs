@@ -13,6 +13,7 @@ namespace Portafolio.Servicios
         Task<IEnumerable<Tecnologia>> ObtenerTecnologiasActivas(int UsuarioID);
         Task<IEnumerable<Tecnologia>> ObtenerTecnologiasInactivas(int UsuarioID);
         Task<Tecnologia> ObtenerTecnologiasPorID(int TecnologiaID, int UsuarioID);
+        Task RestaurarTecnologia(int TecnologiaID, int UsuarioID);
     }
 
     public class RepositorioTecnologia : IRepositorioTecnologia
@@ -68,7 +69,7 @@ namespace Portafolio.Servicios
 
             string query = @"SELECT TecnologiaID, Nombre, UsuarioID, Estado 
                             FROM Tecnologia
-                            WHERE UsuarioID = @UsuarioID AND Estado = 1;";
+                            WHERE UsuarioID = @UsuarioID AND Estado = 0;";
 
             var tecnologias = await connection.QueryAsync<Tecnologia>(query, new { UsuarioID });
 
@@ -86,10 +87,26 @@ namespace Portafolio.Servicios
 
             string query = @"SELECT TecnologiaID, Nombre, UsuarioID, Estado 
                             FROM Tecnologia 
-                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID AND Estado = 1;";
+                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID;";
 
             var tecnologia = await connection.QueryFirstOrDefaultAsync<Tecnologia>(query, new { TecnologiaID, UsuarioID });
             return tecnologia;
+        }
+        /// <summary>
+        /// Marca como habilitada una tecnologia (borrado logico)
+        /// </summary>
+        /// <param name="TecnologiaID">identificador de la tecnologia</param>
+        /// <param name="UsuarioID">indentificador del usuario propietario</param>
+        /// <returns></returns>
+        public async Task RestaurarTecnologia(int TecnologiaID, int UsuarioID)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            string query = @"UPDATE Tecnologia
+                            SET Estado = 1
+                            WHERE TecnologiaID = @TecnologiaID AND UsuarioID = UsuarioID;";
+
+            await connection.ExecuteAsync(query, new { TecnologiaID, UsuarioID });
         }
         /// <summary>
         /// Marca como deshabilitada una tecnologia (borrado logico)
