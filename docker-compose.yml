@@ -1,0 +1,15 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver-container
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Password # Cambia esta contraseña por una segura
+    ports:
+      - "1433:1433"  # Puerto de SQL Server
+    volumes:
+      - sqlserver-data:/var/opt/mssql  # Volumen persistente para datos
+
+volumes:
+  sqlserver-data:
+    driver: local
