@@ -72,7 +72,6 @@ namespace Portafolio.Controllers
             return View(proyectosViewModel);
         }
 
-        [Route("Proyectos/Detalles/{ProyectoID}")]
         public async Task<IActionResult> Detalles(int ProyectoID) 
         {
             var proyecto = await repositorioProyecto.ObtenerProyectoDetalle(ProyectoID);
