@@ -45,6 +45,12 @@ namespace Portafolio.Controllers
                 ultimosProyectosViewModel.Add(ultimoProyecto);
             }
 
+            if (descripcion == null)
+            { 
+                ViewBag.Descripcion = "";
+                return View(ultimosProyectosViewModel);
+            }
+
             ViewBag.Descripcion = descripcion.Descripcion;
             return View(ultimosProyectosViewModel);
         }

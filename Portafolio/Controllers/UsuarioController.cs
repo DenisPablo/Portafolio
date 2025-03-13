@@ -91,27 +91,8 @@ namespace Portafolio.Controllers
         {
             var UsuarioID = servicioUsuario.ObtenerUsuarioId();
             var descripcionUsuarioBD = await repositorioUsuario.ObtenerDescripcion(UsuarioID);
-            DescripcionUsuario descripcionUsuario = new(0,"",UsuarioID);
-
-            if (descripcionUsuarioBD == null)
-            {
-                await repositorioUsuario.AñadirDescrípcion(descripcionUsuario);
-                return View("CrearEditar", descripcionUsuario);
-            }
  
             return View("CrearEditar", descripcionUsuarioBD);
-
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Crear(DescripcionUsuario descripcionUsuario) 
-        {
-            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
-            descripcionUsuario.UsuarioID = UsuarioID;
-
-            await repositorioUsuario.AñadirDescrípcion(descripcionUsuario);
-
-            return RedirectToAction("Index", "Proyecto");
         }
 
         [HttpPost]

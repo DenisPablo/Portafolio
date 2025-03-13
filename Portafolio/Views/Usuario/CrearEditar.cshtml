@@ -1,7 +1,7 @@
 ﻿@model DescripcionUsuario
 
 <!-- Esto tiene una validacion de CRSF automatica -->
-<form asp-controller="Usuario" asp-action="@(Model.DescripcionUsuarioID == 0 ? "Crear" : "Editar")" method="post">
+<form asp-controller="Usuario" asp-action="Editar" method="post">
     <!--
         asp-for: Permite vincular los campos del modelos con los campos del formulario
 

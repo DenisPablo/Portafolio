@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Data;
+using Dapper;
 using Microsoft.Data.SqlClient;
 using Portafolio.Models;
 
@@ -6,7 +7,6 @@ namespace Portafolio.Servicios
 {
     public interface IRepositorioUsuario
     {
-        Task<int> AñadirDescrípcion(DescripcionUsuario descripcionUsuario);
         Task<Usuario> BuscarUsuarioPorEmail(string EmailNormalizado);
         Task<int> CrearUsuario(Usuario usuario);
         Task EditarDescripcion(DescripcionUsuario descripcionUsuario);
@@ -32,13 +32,16 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            var query = @"INSERT INTO Usuario (EmailNormalizado,HashContrasena, Estado)
-                        VALUES (@EmailNormalizado, @HashContrasena, 1);
-                        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            var parametros = new DynamicParameters();
+            parametros.Add("@EmailNormalizado", "correo@ejemplo.com");
+            parametros.Add("@HashContrasena", "hashed_password");
+            parametros.Add("@UsuarioID", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-            var id = await connection.QuerySingleAsync<int>(query, usuario);
+            await connection.ExecuteAsync("CrearUsuario", parametros, commandType: CommandType.StoredProcedure);
+            var id = parametros.Get<int>("@UsuarioID");
 
-            return id;
+            return id; 
+
         }
 
         public async Task<Usuario> BuscarUsuarioPorEmail(string EmailNormalizado) 
@@ -51,18 +54,6 @@ namespace Portafolio.Servicios
             Usuario usuario = await connection.QuerySingleOrDefaultAsync<Usuario>(query, new { EmailNormalizado });
 
             return usuario;
-        }
-
-        public async Task<int> AñadirDescrípcion(DescripcionUsuario descripcionUsuario) 
-        {
-            using var connection = new SqlConnection(connectionString);
-
-            var query = @"INSERT INTO DescripcionUsuario (UsuarioID, Descripcion) VALUES (@UsuarioID, @Descripcion);
-                          SELECT CAST(SCOPE_IDENTITY() AS INT);";
-
-            var id = await connection.QuerySingleAsync<int>(query, descripcionUsuario);
-
-            return id;
         }
 
         public async Task EditarDescripcion(DescripcionUsuario descripcionUsuario) 
@@ -100,6 +91,5 @@ namespace Portafolio.Servicios
 
             return descripcionDeUsuario;
         }
-
     }
 }
