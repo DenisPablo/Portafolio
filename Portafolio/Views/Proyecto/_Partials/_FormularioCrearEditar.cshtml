@@ -5,7 +5,8 @@
 
 
 <!-- Esto tiene una validacion de CRSF automatica -->
-<form asp-controller="Proyecto" asp-action="@(Model.ProyectoID == 0 ? "Crear" : "Editar")" method="post" enctype="multipart/form-data">
+<form asp-controller="Proyecto" asp-action="@(Model.ProyectoID == 0 ? "Crear" : "Editar")" method="post"
+    enctype="multipart/form-data">
     <!--
         asp-for: Permite vincular los campos del modelos con los campos del formulario
 
@@ -13,28 +14,26 @@
         NOTA: Para que funcionen correctamente deben incluirse los script de validacion en Frot,
         en este momento se encuetran agregados en _Layout
     -->
-    <input type="hidden" asp-for="ProyectoID"/>
+    <input type="hidden" asp-for="ProyectoID" />
     <div class="mb-3">
-        <label asp-for="Titulo" class="form-label"></label>
-        <input type="text" asp-for="Titulo" class="form-control" />
+        <input type="text" asp-for="Titulo" class="form-control" placeholder="Titulo" />
         <span asp-validation-for="Titulo" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="CategoriaID"></label>
         <select asp-for="CategoriaID" asp-items="@(ViewBag.Categorias)" class="form-control">
             <option value="">Seleccione una categoria</option>
         </select>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Descripcion" class="form-label"></label>
-        <textarea id="Descripcion" name="Descripcion" class="form-control">@Model.Descripcion</textarea>
+        <textarea id="Descripcion" name="Descripcion" class="form-control"
+            placeholder="Descripcion">@Model.Descripcion</textarea>
     </div>
 
     <div class="mb-3">
-        <label for="imagenes" class="form-label">Subir Imágenes</label>
-        <input type="file" id="imagenes" name="imagenes" class="form-control" multiple  />
+        <label for="imagenes" class="form-label">Imagenes del Proyecto</label>
+        <input type="file" id="imagenes" name="imagenes" class="form-control" multiple />
     </div>
 
 
@@ -44,24 +43,35 @@
             @foreach (var imagen in ViewBag.Imagenes)
             {
                 <div class="col-md-4 position-relative border p-2 rounded text-center">
-                    <input type="checkbox" name="publicIDs" value="@imagen.PublicID" class="position-absolute top-0 start-0 m-2">
+                    <input type="checkbox" name="publicIDs" value="@imagen.PublicID"
+                        class="position-absolute top-0 start-0 m-2">
                     <img src="@imagen.URL" alt="Imagen" class="img-fluid rounded">
                 </div>
             }
         </div>
     }
 
+    <div class="mt-3">
+        <input type="text" asp-for="UrlGitHub" class="form-control" placeholder="Url del repositorio" />
+        <span asp-validation-for="UrlGitHub" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3">
+        <input type="text" asp-for="UrlDesplegado" class="form-control" placeholder="Url del Proyecto" />
+        <span asp-validation-for="UrlDesplegado" class="text-danger"></span>
+    </div>
+
     <div class="mb-3">
-        <label>Seleccionar Tecnologias:</label>
         <div class="checkbox-group mt-3">
             @foreach (var tecnologia in ViewBag.Tecnologias)
             {
                 <div class="form-check col-2">
-                    <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas" value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID"
-                    @(tecnologiasUsadas.Any(t => t.TecnologiaID == tecnologia.TecnologiaID) ? "checked" : "") />
-                    <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
-                </div>
-            }
+                    <input class="custom-checkbox" type="checkbox" name="TecnologiasSeleccionadas"
+                        value="@tecnologia.TecnologiaID" id="@tecnologia.TecnologiaID" @(tecnologiasUsadas.Any(t =>
+                        t.TecnologiaID == tecnologia.TecnologiaID) ? "checked" : "") />
+                <label class="custom-label" for="@tecnologia.TecnologiaID">@tecnologia.Nombre</label>
+            </div>
+                        }
         </div>
     </div>
 
@@ -71,7 +81,7 @@
         </button>
         <a asp-action="Index" asp-controller="Proyecto" class="btn btn-secondary">Cancelar</a>
     </div>
-    
+
     <div id="confirmar" class="mb-3 confirmar alert-danger text-center">
         <p>¿Esta seguro que desea realizar esta accion?</p>
         <button type="submit" class="btn btn-primary">Confirmar</button>

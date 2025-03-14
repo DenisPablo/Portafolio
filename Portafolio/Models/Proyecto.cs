@@ -9,22 +9,22 @@ namespace Portafolio.Models
     public class Proyecto
     {
         public int ProyectoID { get; set; }
-        [Required]
-        //[Remote(action: "VerificarExistenciaProyecto", controller: "Proyecto")]
-        [StringLength(50, ErrorMessage ="El titulo es demasiado largo")]
+        [Required(ErrorMessage = "El titulo es obligatorio")]
+        [Remote(action: "VerificarExistenciaProyecto", controller: "Proyecto", AdditionalFields = "ProyectoID", ErrorMessage = "El título ya está en uso.")]
+        [StringLength(50, ErrorMessage = "El titulo es demasiado largo")]
         public string Titulo { get; set; }
         [Required]
-        public string Descripcion {  get; set; }
-        /// <summary>
-        /// Cada proyecto le pertenece a un usuario y solo el puede modificar y eliminar la misma.
-        /// </summary>
+        public string Descripcion { get; set; }
         [Required]
         public int UsuarioID { get; set; }
-        public DateTime FechaPubli {  get; set; }
+        public DateTime FechaPubli { get; set; }
         [Required]
         [Display(Name = "Categoria")]
         public int CategoriaID { get; set; }
 
         public int Antiguedad { get; set; }
+
+        public string UrlGitHub { get; set; }
+        public string UrlDesplegado { get; set; }
     }
 }

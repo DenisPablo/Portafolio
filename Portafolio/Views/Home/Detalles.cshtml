@@ -7,37 +7,48 @@
 <div class="container">
     <div class="card bg-dark p-3">
         <div class="card-body">
-            <div class="text-center mb-4">
+            <div class="text-center mb-4 card-title bg-dark">
                 <h1>@Model.Titulo</h1>
             </div>
 
-            <div class="descripcion position-relative">
-
-                <div class="galeria slide">
-                    <div id="galeriaCarousel" class="carousel" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            @foreach (var imagen in Model.Imagenes)
-                            {
-                                <div class="carousel-item @(isFirst ? "active" : "")">
-                                    <img src="@imagen.URL" class="d-block w-100 img-fluid" alt="Imagen">
-                                </div>
-                                isFirst = false;
-                            }
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#galeriaCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#galeriaCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
-                    </div>
-                </div>
-                <!-- Galería incrustada con float -->
-
-                <!-- Texto de la descripción, el cual fluirá alrededor de la galería -->
+            <div class="descripcion">
                 @Html.Raw(Model.Descripcion)
             </div>
+
+            @if (Model.Imagenes != null && Model.Imagenes.Any())
+            {
+                <div class="descripcion position-relative">
+
+                    <div class="galeria slide ms-auto me-auto">
+                        <div id="galeriaCarousel" class="carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach (var imagen in Model.Imagenes)
+                                {
+                                    <div class="carousel-item @(isFirst ? "active" : "")">
+                                        <img src="@imagen.URL" class="d-block w-100 img-fluid" alt="Imagen">
+                                    </div>
+                                    isFirst = false;
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#galeriaCarousel"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#galeriaCarousel"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            }
         </div>
+
+        <div class="card-footer bg-dark">
+            tecnologias
+        </div>
+
     </div>
 </div>
 

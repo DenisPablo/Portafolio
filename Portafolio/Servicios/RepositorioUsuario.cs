@@ -33,15 +33,14 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
 
             var parametros = new DynamicParameters();
-            parametros.Add("@EmailNormalizado", "correo@ejemplo.com");
-            parametros.Add("@HashContrasena", "hashed_password");
+            parametros.Add("@EmailNormalizado", usuario.EmailNormalizado);
+            parametros.Add("@HashContrasena", usuario.HashContrasena);
             parametros.Add("@UsuarioID", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
             await connection.ExecuteAsync("CrearUsuario", parametros, commandType: CommandType.StoredProcedure);
             var id = parametros.Get<int>("@UsuarioID");
 
             return id; 
-
         }
 
         public async Task<Usuario> BuscarUsuarioPorEmail(string EmailNormalizado) 

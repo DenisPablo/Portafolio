@@ -13,7 +13,10 @@
 
         public IEnumerable<ImagenProyecto> Imagenes { get; set; } = null;
 
-        public ProyectoViewModel(int proyectoID,string titutlo, string descripcion, IEnumerable<Tecnologia> tecnologias, int antiguedad, string categoria, IEnumerable<ImagenProyecto> imagenes)
+        public string UrlGitHub { get; set; }
+        public string UrlDesplegado { get; set; }
+
+        public ProyectoViewModel(int proyectoID,string titutlo, string descripcion, IEnumerable<Tecnologia> tecnologias, int antiguedad, string categoria, IEnumerable<ImagenProyecto> imagenes, string urlGitHub, string urlDesplegado)
         {
             ProyectoID = proyectoID;
             Titulo = titutlo;
@@ -22,6 +25,8 @@
             Antiguedad = antiguedad;
             Categoria = categoria;
             Imagenes = imagenes;
+            UrlGitHub = urlGitHub;
+            UrlDesplegado = urlDesplegado;
         }
     }
 }

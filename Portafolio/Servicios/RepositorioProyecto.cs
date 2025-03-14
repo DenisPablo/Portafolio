@@ -9,7 +9,7 @@ namespace Portafolio.Servicios
         Task<int> Crear(Proyecto proyecto);
         Task EditarProyecto(Proyecto proyecto);
         Task EliminarProyecto(int ProyectoID, int UsuarioID);
-        Task<bool> ExisteProyecto(string Titulo, int UsuarioID);
+        Task<bool> ExisteProyecto(string Titulo, int ProyectoID, int UsuarioID);
         Task<Proyecto> ObtenerProyectoPorID(int ProyectoID, int UsuarioID);
         Task<IEnumerable<Proyecto>> ObtenerProyectosActivos(int usuarioID);
         Task<Proyecto> ObtenerProyectoDetalle(int ProyectoID);
@@ -19,7 +19,8 @@ namespace Portafolio.Servicios
         Task RestaurarProyecto(int ProyectoID, int UsuarioID);
     }
 
-    public class RepositorioProyecto : IRepositorioProyecto {
+    public class RepositorioProyecto : IRepositorioProyecto
+    {
 
         private readonly string connectionString;
 
@@ -36,9 +37,9 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"INSERT INTO Proyecto (Titulo, Descripcion, FechaPubli, CategoriaID, Estado, UsuarioID) 
-                     VALUES (@Titulo, @Descripcion, @FechaPubli,@CategoriaID, 1, @UsuarioID);
-                     SELECT CAST(SCOPE_IDENTITY() AS INT);"; 
+            string query = @"INSERT INTO Proyecto (Titulo, Descripcion, FechaPubli, CategoriaID, Estado, UsuarioID, UrlGitHub, UrlDesplegado) 
+                     VALUES (@Titulo, @Descripcion, @FechaPubli, @CategoriaID, 1, @UsuarioID, @UrlGitHub, @UrlDesplegado);
+                     SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             var id = await connection.QuerySingleAsync<int>(query, proyecto);
             return id;
@@ -48,17 +49,17 @@ namespace Portafolio.Servicios
         /// </summary>
         /// <param name="usuarioID">Identifica al propietario de los proyectos</param>
         /// <returns>Enumerable de proyectos</returns>
-        public async Task<IEnumerable<Proyecto>> ObtenerProyectosActivos(int UsuarioID) 
+        public async Task<IEnumerable<Proyecto>> ObtenerProyectosActivos(int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad, UrlGitHub,             UrlDesplegado
                             FROM Proyecto 
                             WHERE UsuarioID = @UsuarioID AND Estado = 1
                             ORDER BY FechaPubli DESC;";
 
             var proyectos = await connection.QueryAsync<Proyecto>(query, new { UsuarioID });
-            
+
             return proyectos;
         }
         /// <summary>
@@ -70,7 +71,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad, UrlGitHub, UrlDesplegado
                             FROM Proyecto 
                             WHERE UsuarioID = @UsuarioID AND Estado = 0
                             ORDER BY FechaPubli DESC;";
@@ -87,7 +88,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad, UrlGitHub, UrlDesplegado
                             FROM Proyecto 
                             WHERE ProyectoID = @ProyectoID AND Estado = 1;";
 
@@ -103,7 +104,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, Estado, CategoriaID, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad, UrlGitHub, UrlDesplegado
                             FROM Proyecto 
                             WHERE Estado = 1
                             ORDER BY FechaPubli DESC;";
@@ -118,11 +119,11 @@ namespace Portafolio.Servicios
         /// <param name="ProyectoID">Identificador del proyecto a buscar.</param>
         /// <param name="UsuarioID">Identificador del propietario del proyecto.</param>
         /// <returns>El proyecto encontrado o null si no existe.</returns>
-        public async Task<Proyecto> ObtenerProyectoPorID(int ProyectoID, int UsuarioID) 
+        public async Task<Proyecto> ObtenerProyectoPorID(int ProyectoID, int UsuarioID)
         {
             using var connecion = new SqlConnection(connectionString);
 
-            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion,CategoriaID, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad 
+            string query = @"SELECT ProyectoID, Titulo, FechaPubli, Descripcion,CategoriaID, UsuarioID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad, UrlGitHub, UrlDesplegado 
                             FROM Proyecto 
                             WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID;";
 
@@ -154,7 +155,7 @@ namespace Portafolio.Servicios
         /// <param name="ProyectoID">Identifica el proyecto a deshabilitar.</param>
         /// <param name="UsuarioID">Identifica al propietario del proyecto.</param>
         /// <returns>Una tarea que representa la operación asíncrona.</returns>
-        public async Task EliminarProyecto(int ProyectoID, int UsuarioID) 
+        public async Task EliminarProyecto(int ProyectoID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -170,12 +171,12 @@ namespace Portafolio.Servicios
         /// </summary>
         /// <param name="proyecto">Instancia de un proyecto con la nueva información a actualizar.</param>
         /// <returns>Una tarea que representa la operación asíncrona.</returns>
-        public async Task EditarProyecto(Proyecto proyecto) 
+        public async Task EditarProyecto(Proyecto proyecto)
         {
             using var connection = new SqlConnection(connectionString);
 
             string query = @"UPDATE Proyecto 
-                            SET Titulo = @Titulo, Descripcion = @Descripcion, CategoriaID = @CategoriaID
+                            SET Titulo = @Titulo, Descripcion = @Descripcion, CategoriaID = @CategoriaID, UrlGitHub = @UrlGitHub, UrlDesplegado = @UrlDesplegado
                             WHERE ProyectoID = @ProyectoID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
             await connection.ExecuteAsync(query, proyecto);
@@ -186,15 +187,15 @@ namespace Portafolio.Servicios
         /// <param name="nombre">Nombre del proyecto a buscar.</param>
         /// <param name="UsuarioID">Identificador del propietario del proyecto.</param>
         /// <returns>Un valor booleano que indica si existe o no el proyecto.</returns>
-        public async Task<bool> ExisteProyecto(string Titulo, int UsuarioID) 
+        public async Task<bool> ExisteProyecto(string Titulo, int ProyectoID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 
             string query = @"SELECT 1 
                             FROM Proyecto 
-                            WHERE Titulo = @Titulo AND UsuarioID = @UsuarioID";
+                            WHERE Titulo = @Titulo AND ProyectoID <> @ProyectoID AND UsuarioID = @UsuarioID";
 
-            var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { Titulo, UsuarioID });
+            var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { Titulo, ProyectoID, UsuarioID });
 
             return existe == 1;
         }
@@ -211,7 +212,6 @@ namespace Portafolio.Servicios
                             WHERE Estado = 1
                             ORDER BY FechaPubli DESC;";
 
-            
 
             var proyectos = await connection.QueryAsync<Proyecto>(query);
 

@@ -3,45 +3,48 @@
     ViewData["Title"] = "Bienvenido";
 }
 
-<div class="container ms-auto card bg-dark">
-    <div class="card-body">
+
+<div class="container ms-auto card bg-dark p-5">
+    <div class="card-header bg-dark">
+        <h1 class="text-success animated-text silkscreen-bold"></h1>
+    </div>
+
+    <div class="card-body bg-dark">
 
         <div class="bienvenida position-relative">
 
             <img class="imagen-codigo img-fluid" src="~/Imagenes/Code.png" />
 
             <div>
-                    @Html.Raw(ViewBag.Descripcion)
+                @Html.Raw(ViewBag.Descripcion)
             </div>
         </div>
-
-        <div class="proyectos row">
-            @foreach (var proyecto in Model)
-            {
-                <div class="col-md-3 proyecto ms-auto img mb-3 mb-md-0">
-                    <img class="img-thumbnail mx-auto d-block"
-                         src="~/Imagenes/web-design-3411373_640.jpg"
-                         alt="Miniatura del proyecto" />
-                    <div class="mt-3">
-                        <h1>@proyecto.Titulo</h1>
-                        <p>
-                            <strong class="text-success">Tecnologías:</strong>
-                            @string.Join(", ", proyecto.Tecnologias.Select(t => t.Nombre))
-                        </p>
-                        <p><strong class="text-success">Antigüedad:</strong> @proyecto.Antiguedad meses</p>
-                        <p><strong class="text-success">Categoría:</strong> @proyecto.Categoria</p>
-                    </div>
-                    <a class="btn btn-outline-success align-self-end mt-2"
-                       asp-controller="Home"
-                       asp-action="Detalles"
-                       asp-route-ProyectoID="@proyecto.ProyectoID">
-                        Ver
-                    </a>
-                </div>
-            }
-        </div>
-
     </div>
+
+
+    <div class="proyectos row card-footer bg-dark">
+        @foreach (var proyecto in Model)
+        {
+            <div class="col-md-3 proyecto ms-auto img mb-3 mb-md-0">
+                <img class="img-thumbnail mx-auto d-block" src="~/Imagenes/web-design-3411373_640.jpg"
+                    alt="Miniatura del proyecto" />
+                <div class="mt-3">
+                    <h1>@proyecto.Titulo</h1>
+                    <p>
+                        <strong class="text-success">Tecnologías:</strong>
+                        @string.Join(", ", proyecto.Tecnologias.Select(t => t.Nombre))
+                    </p>
+                    <p><strong class="text-success">Antigüedad:</strong> @proyecto.Antiguedad meses</p>
+                    <p><strong class="text-success">Categoría:</strong> @proyecto.Categoria</p>
+                </div>
+                <a class="btn btn-outline-success align-self-end mt-2" asp-controller="Home" asp-action="Detalles"
+                    asp-route-ProyectoID="@proyecto.ProyectoID">
+                    Ver
+                </a>
+            </div>
+        }
+    </div>
+
 </div>
 
 @section Styles {

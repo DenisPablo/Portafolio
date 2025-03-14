@@ -18,7 +18,7 @@ namespace Portafolio.Controllers
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly IHtmlHelper htmlHelper;
 
-        public HomeController(IRepositorioProyecto repositorioProyecto, IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IRepositorioCategoria repositorioCategoria, IRepositorioImagenProyecto repositorioImagenProyecto,IRepositorioUsuario repositorioUsuario, IHtmlHelper htmlHelper)
+        public HomeController(IRepositorioProyecto repositorioProyecto, IRepositorioTecnologiaUsada repositorioTecnologiaUsada, IRepositorioCategoria repositorioCategoria, IRepositorioImagenProyecto repositorioImagenProyecto, IRepositorioUsuario repositorioUsuario, IHtmlHelper htmlHelper)
         {
             this.repositorioProyecto = repositorioProyecto;
             this.repositorioTecnologiaUsada = repositorioTecnologiaUsada;
@@ -28,7 +28,7 @@ namespace Portafolio.Controllers
             this.htmlHelper = htmlHelper;
         }
 
-        public async Task<IActionResult> Index() 
+        public async Task<IActionResult> Index()
         {
             var ultimosProyectos = await repositorioProyecto.ObtenerUltimosProyectos();
             var descripcion = await repositorioUsuario.ObtenerDescripcionVista();
@@ -36,17 +36,18 @@ namespace Portafolio.Controllers
             IEnumerable<ImagenProyecto> imagenes = [];
 
 
-            foreach(var proyecto in ultimosProyectos) 
+            foreach (var proyecto in ultimosProyectos)
             {
                 var tecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, proyecto.UsuarioID);
                 var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
 
-                ProyectoViewModel ultimoProyecto = new(proyecto.ProyectoID, proyecto.Titulo, proyecto.Descripcion, tecnologiasUsadas, proyecto.Antiguedad, categoria.Nombre, imagenes);
+                ProyectoViewModel ultimoProyecto = new(proyecto.ProyectoID, proyecto.Titulo, proyecto.Descripcion, tecnologiasUsadas, proyecto.Antiguedad, categoria.Nombre, imagenes, proyecto.UrlGitHub, proyecto.UrlDesplegado);
+
                 ultimosProyectosViewModel.Add(ultimoProyecto);
             }
 
             if (descripcion == null)
-            { 
+            {
                 ViewBag.Descripcion = "";
                 return View(ultimosProyectosViewModel);
             }
@@ -68,24 +69,24 @@ namespace Portafolio.Controllers
                 var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
                 IEnumerable<ImagenProyecto> Imagenes = [];
 
-                ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID,proyecto.Titulo, DescripcionResumida, tecnologias, proyecto.Antiguedad, categoria.Nombre, Imagenes);
+                ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID, proyecto.Titulo, DescripcionResumida, tecnologias, proyecto.Antiguedad, categoria.Nombre, Imagenes, proyecto.UrlGitHub, proyecto.UrlDesplegado);
 
                 proyectosViewModel.Add(proyectoViewModel);
-              
+
             }
 
 
             return View(proyectosViewModel);
         }
 
-        public async Task<IActionResult> Detalles(int ProyectoID) 
+        public async Task<IActionResult> Detalles(int ProyectoID)
         {
             var proyecto = await repositorioProyecto.ObtenerProyectoDetalle(ProyectoID);
             var categoria = await repositorioCategoria.ObtenerCategoriasPorID(proyecto.CategoriaID, proyecto.UsuarioID);
             var tecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyectoDetalles(ProyectoID);
             var imagenes = await repositorioImagenProyecto.ObtenerImagenesProyecto(proyecto.ProyectoID, proyecto.UsuarioID);
 
-            ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID, proyecto.Titulo, proyecto.Descripcion, tecnologiasUsadas, proyecto.Antiguedad, categoria.Nombre, imagenes);
+            ProyectoViewModel proyectoViewModel = new(proyecto.ProyectoID, proyecto.Titulo, proyecto.Descripcion, tecnologiasUsadas, proyecto.Antiguedad, categoria.Nombre, imagenes, proyecto.UrlGitHub, proyecto.UrlDesplegado);
 
             return View(proyectoViewModel);
         }

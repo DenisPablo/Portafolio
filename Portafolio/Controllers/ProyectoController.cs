@@ -50,17 +50,17 @@ namespace Portafolio.Controllers
         /// Renderiza una vista para crear un nuevo proyecto en la base de datos
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Crear() 
+        public async Task<IActionResult> Crear()
         {
-                Proyecto proyecto = new Proyecto();
-                var UsuarioID = servicioUsuario.ObtenerUsuarioId();
-                var categorias = await repositorioCategoria.ObtenerCategoriasActivas(UsuarioID);
-                var tecnologias = await repositorioTecnologia.ObtenerTecnologiasActivas(UsuarioID);
-                
-                ViewBag.Tecnologias = tecnologias;
-                ViewBag.TecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, UsuarioID);
-                ViewBag.Categorias = new SelectList(categorias, "CategoriaID", "Nombre");
-                return View("CrearEditar", proyecto);
+            Proyecto proyecto = new Proyecto();
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            var categorias = await repositorioCategoria.ObtenerCategoriasActivas(UsuarioID);
+            var tecnologias = await repositorioTecnologia.ObtenerTecnologiasActivas(UsuarioID);
+
+            ViewBag.Tecnologias = tecnologias;
+            ViewBag.TecnologiasUsadas = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(proyecto.ProyectoID, UsuarioID);
+            ViewBag.Categorias = new SelectList(categorias, "CategoriaID", "Nombre");
+            return View("CrearEditar", proyecto);
         }
         /// <summary>
         /// Carga en la base de datos un nuevo proyecto
@@ -70,7 +70,7 @@ namespace Portafolio.Controllers
         /// <param name="tecnologiasSeleccionadas"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Crear(Proyecto proyecto, IEnumerable<IFormFile> imagenes, int[] tecnologiasSeleccionadas) 
+        public async Task<IActionResult> Crear(Proyecto proyecto, IEnumerable<IFormFile> imagenes, int[] tecnologiasSeleccionadas)
         {
             var UsuarioID = servicioUsuario.ObtenerUsuarioId();
 
@@ -79,12 +79,12 @@ namespace Portafolio.Controllers
             proyecto.Descripcion = proyectoUtilidades.LimpiarInputHTML(proyecto.Descripcion);
             proyecto.FechaPubli = DateTime.Now;
 
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
-              return View("CrearEditar", proyecto);
+                return View("CrearEditar", proyecto);
             }
-           
-            var ProyectoID  = await repositorioProyecto.Crear(proyecto);
+
+            var ProyectoID = await repositorioProyecto.Crear(proyecto);
 
             //Se cargan las tecnologias seleccionadas.
             await GuardarTecnologiaUsada(tecnologiasSeleccionadas, ProyectoID, UsuarioID);
@@ -124,7 +124,7 @@ namespace Portafolio.Controllers
         /// </summary>
         /// <param name="proyecto">Instancia de la clase proyecto con la información modificada.</param>
         /// <returns>Redirige a la lista de proyectos si la edición es exitosa, o muestra una vista de error si el modelo es inválido.</returns>
-        
+
         [HttpPost]
         public async Task<IActionResult> Editar(Proyecto proyecto, int[] tecnologiasSeleccionadas, IEnumerable<IFormFile> imagenes, string[] publicIDs)
         {
@@ -139,10 +139,11 @@ namespace Portafolio.Controllers
 
             await CargarImagenes(imagenes, proyecto.ProyectoID, UsuarioID);
 
-            if (publicIDs != null) {
-                foreach(var publicID in publicIDs) 
+            if (publicIDs != null)
+            {
+                foreach (var publicID in publicIDs)
                 {
-                    await BorrarImagen(publicID,UsuarioID);
+                    await BorrarImagen(publicID, UsuarioID);
                 }
             }
 
@@ -160,7 +161,7 @@ namespace Portafolio.Controllers
         public async Task<IActionResult> ConfirmarEliminar(int ProyectoID)
         {
             int UsuarioID = servicioUsuario.ObtenerUsuarioId();
-            Proyecto proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID); 
+            Proyecto proyecto = await repositorioProyecto.ObtenerProyectoPorID(ProyectoID, UsuarioID);
 
             if (proyecto == null)
             {
@@ -252,7 +253,8 @@ namespace Portafolio.Controllers
                 await cloudinaryService.ElimanarImagenAsync(publicID);
                 await repositorioImagenProyecto.EliminarImagenProyecto(publicID, UsuarioID);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.ToString());
             }
         }
@@ -262,13 +264,13 @@ namespace Portafolio.Controllers
         /// </summary>
         /// <param name="nombre">Nombre de la categoría a verificar.</param>
         /// <returns>Un valor booleano en formato JSON que indica si la categoría ya existe.</returns>
-        
-        /*
+
+
         [HttpGet]
-        public async Task<IActionResult> VerificarExistenciaProyecto(string titulo)
+        public async Task<IActionResult> VerificarExistenciaProyecto(string titulo, int ProyectoID)
         {
-            var UsuarioID = await repositorioUsuario.ObtenerUsuario();
-            var yaExisteProyecto = await repositorioProyecto.ExisteProyecto(titulo, UsuarioID);
+            var UsuarioID = servicioUsuario.ObtenerUsuarioId();
+            var yaExisteProyecto = await repositorioProyecto.ExisteProyecto(titulo, ProyectoID, UsuarioID);
 
             if (yaExisteProyecto)
             {
@@ -277,7 +279,7 @@ namespace Portafolio.Controllers
 
             return Json(true);
         }
-        */
+
 
         /// <summary>
         /// Se encarga de registrar las imagenes en la base de datos y subirlas a Clodinary
@@ -314,7 +316,8 @@ namespace Portafolio.Controllers
         /// <param name="ProyectoID"></param>
         /// <param name="UsuarioID"></param>
         /// <returns></returns>
-        private async Task ActualizarTecnologiasUsadas(int[] tecnologiasSeleccionadas, int ProyectoID, int UsuarioID) {
+        private async Task ActualizarTecnologiasUsadas(int[] tecnologiasSeleccionadas, int ProyectoID, int UsuarioID)
+        {
 
             await LimpiarTecnologias(ProyectoID, UsuarioID);
             await GuardarTecnologiaUsada(tecnologiasSeleccionadas, ProyectoID, UsuarioID);
@@ -360,7 +363,7 @@ namespace Portafolio.Controllers
         /// <param name="ProyectoID"></param>
         /// <param name="UsuarioID"></param>
         /// <returns></returns>
-        private async Task GuardarTecnologiaUsada(int[] tecnologiasSeleccionadas, int ProyectoID, int UsuarioID) 
+        private async Task GuardarTecnologiaUsada(int[] tecnologiasSeleccionadas, int ProyectoID, int UsuarioID)
         {
             foreach (var TecnologiaID in tecnologiasSeleccionadas)
             {
@@ -374,7 +377,8 @@ namespace Portafolio.Controllers
         /// <param name="ProyectoID"></param>
         /// <param name="UsuarioID"></param>
         /// <returns></returns>
-        private async Task LimpiarTecnologias(int ProyectoID,int UsuarioID) {
+        private async Task LimpiarTecnologias(int ProyectoID, int UsuarioID)
+        {
             var tecnologiasPrevias = await repositorioTecnologiaUsada.ObtenerTecnologiasProyecto(ProyectoID, UsuarioID);
 
             foreach (var tecnologia in tecnologiasPrevias)
