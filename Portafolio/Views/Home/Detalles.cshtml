@@ -41,14 +41,24 @@
                         </div>
                     </div>
 
+                    <div class="float-end">
+                        <a class="btn btn-outline-success align-self-end mt-2">
+                            <i class="bi bi-file-earmark-code-fill"></i> Demo
+                        </a>
+                        <a class="btn btn-outline-success align-self-end mt-2" href="@Model.UrlGitHub" target="_blank">
+                            <i class="bi bi-github"></i> Codigo
+                        </a>
+                    </div>
                 </div>
             }
         </div>
 
         <div class="card-footer bg-dark">
-            tecnologias
+            @foreach (var tecnologia in Model.Tecnologias)
+            {
+                <img src="@tecnologia.URLIcon" alt="@(tecnologia.Nombre) Logo" width="50">
+            }
         </div>
-
     </div>
 </div>
 

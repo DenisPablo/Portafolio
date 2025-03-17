@@ -39,7 +39,10 @@
                 </div>
                 <a class="btn btn-outline-success align-self-end mt-2" asp-controller="Home" asp-action="Detalles"
                     asp-route-ProyectoID="@proyecto.ProyectoID">
-                    Ver
+                    <i class="bi bi-file-earmark-code-fill"></i> Ver Detalles
+                </a>
+                <a class="btn btn-outline-success align-self-end mt-2" href="@proyecto.UrlGitHub" target="_blank">
+                    <i class="bi bi-github"></i> Codigo
                 </a>
             </div>
         }

@@ -16,6 +16,10 @@
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <input type="text" asp-for="URLIcon" class="form-control" placeholder="Ingrese URL del icono" />
+    </div>
+
     <div id="guardar" class="m-2 ms-auto">
         <button onclick="confirmar()" type="button" class="btn btn-primary">
             @(Model.TecnologiaID == 0 ? "Crear" : "Guardar Cambios")

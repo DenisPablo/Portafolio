@@ -14,8 +14,9 @@ namespace Portafolio.Controllers
         }
 
 
-        public IActionResult Subir() {
-            return View();   
+        public IActionResult Subir()
+        {
+            return View();
         }
 
         [HttpPost]
@@ -69,9 +70,10 @@ namespace Portafolio.Controllers
             }
 
             var mimeType = "application/pdf";
-            var fileName = Path.GetFileName(filePath);
+            Response.Headers.ContentDisposition = "inline; filename=cv.pdf"; // Especifica inline y un nombre de archivo
 
-            return PhysicalFile(filePath, mimeType, fileName);
+
+            return PhysicalFile(filePath, mimeType, enableRangeProcessing: true); // Habilita la visualización en el navegador
         }
 
     }

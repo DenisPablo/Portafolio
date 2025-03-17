@@ -9,7 +9,7 @@ namespace Portafolio.Servicios
         Task<int> Crear(Tecnologia tecnologia);
         Task EditarTecnologia(Tecnologia tecnologia);
         Task EliminarTecnologia(int CategoriaID, int UsuarioID);
-        Task<bool> ExisteTecnologia(string nombre, int UsuarioID);
+        Task<bool> ExisteTecnologia(string Nombre, int TecnologiaID, int UsuarioID);
         Task<IEnumerable<Tecnologia>> ObtenerTecnologiasActivas(int UsuarioID);
         Task<IEnumerable<Tecnologia>> ObtenerTecnologiasInactivas(int UsuarioID);
         Task<Tecnologia> ObtenerTecnologiasPorID(int TecnologiaID, int UsuarioID);
@@ -34,8 +34,8 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"INSERT INTO Tecnologia (Nombre, UsuarioID, Estado) 
-                             VALUES (@Nombre, @UsuarioID, 1);
+            string query = @"INSERT INTO Tecnologia (Nombre, URLIcon, UsuarioID, Estado) 
+                             VALUES (@Nombre, @URLIcon, @UsuarioID, 1);
                              SELECT SCOPE_IDENTITY();";
 
             var id = await connection.QuerySingleAsync<int>(query, tecnologia);
@@ -50,7 +50,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT TecnologiaID, Nombre, UsuarioID, Estado 
+            string query = @"SELECT TecnologiaID, Nombre, URLIcon, UsuarioID, Estado 
                             FROM Tecnologia
                             WHERE UsuarioID = @UsuarioID AND Estado = 1;";
 
@@ -67,7 +67,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT TecnologiaID, Nombre, UsuarioID, Estado 
+            string query = @"SELECT TecnologiaID, Nombre, URLIcon, UsuarioID, Estado 
                             FROM Tecnologia
                             WHERE UsuarioID = @UsuarioID AND Estado = 0;";
 
@@ -85,7 +85,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT TecnologiaID, Nombre, UsuarioID, Estado 
+            string query = @"SELECT TecnologiaID, Nombre, URLIcon, UsuarioID, Estado 
                             FROM Tecnologia 
                             WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID;";
 
@@ -134,10 +134,10 @@ namespace Portafolio.Servicios
             using var connection = new SqlConnection(connectionString);
 
             string query = @"UPDATE Tecnologia 
-                            SET Nombre = @Nombre
+                            SET Nombre = @Nombre, URLIcon = @URLIcon
                             WHERE TecnologiaID = @TecnologiaID AND UsuarioID = @UsuarioID AND Estado = 1;";
 
-            await connection.ExecuteAsync(query, tecnologia);  
+            await connection.ExecuteAsync(query, tecnologia);
         }
         /// <summary>
         /// Verifica si una tecnología con un nombre específico ya existe para un usuario.
@@ -145,13 +145,14 @@ namespace Portafolio.Servicios
         /// <param name="nombre">Nombre de la tecnología a buscar.</param>
         /// <param name="UsuarioID">Identificador del propietario de la tecnología.</param>
         /// <returns>Un valor booleano que indica si existe o no la tecnología.</returns>
-        public async Task<bool> ExisteTecnologia(string nombre, int UsuarioID)
+        public async Task<bool> ExisteTecnologia(string Nombre, int TecnologiaID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT 1 FROM Tecnologia WHERE Nombre = @Nombre AND UsuarioID = @UsuarioID;";
+            string query = @"SELECT 1 FROM Tecnologia 
+                            WHERE Nombre = @Nombre AND TecnologiaID <> @TecnologiaID AND UsuarioID = @UsuarioID;";
 
-            var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { nombre, UsuarioID });
+            var existe = await connection.QueryFirstOrDefaultAsync<int>(query, new { Nombre, TecnologiaID, UsuarioID });
 
             return existe == 1;
         }

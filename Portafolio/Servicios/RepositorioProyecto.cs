@@ -207,7 +207,7 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT TOP (3) ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, CategoriaID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad
+            string query = @"SELECT TOP (3) ProyectoID, Titulo, FechaPubli, Descripcion, UsuarioID, CategoriaID, Estado, DATEDIFF(MONTH, FechaPubli, GETDATE()) as Antiguedad, UrlGitHub, UrlDesplegado
                             FROM Proyecto
                             WHERE Estado = 1
                             ORDER BY FechaPubli DESC;";

@@ -33,8 +33,13 @@
                            asp-controller="Home"
                            asp-action="Detalles"
                            asp-route-ProyectoID="@proyecto.ProyectoID">
-                            Ver detalles
+                             <i class="bi bi-file-earmark-code-fill"></i> Ver Detalles
                         </a>
+
+                         <a class="btn btn-outline-success align-self-end" href="@proyecto.UrlGitHub" target="_blank">
+                            <i class="bi bi-github"></i> Codigo
+                        </a>
+
                     </div>
                 </div>
             </div>

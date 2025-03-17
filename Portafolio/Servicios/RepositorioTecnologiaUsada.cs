@@ -9,7 +9,7 @@ namespace Portafolio.Servicios
     public interface IRepositorioTecnologiaUsada
     {
         Task<int> Crear(int ProyectoID, int TecnologiaID, int UsuarioID);
-        Task EliminarTecnologia(int TecnologiaID,int ProyectoID, int UsuarioID);
+        Task EliminarTecnologia(int TecnologiaID, int ProyectoID, int UsuarioID);
         Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyecto(int ProyectoID, int UsuarioID);
         Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyectoDetalles(int ProyectoID);
     }
@@ -47,14 +47,15 @@ namespace Portafolio.Servicios
         /// <param name="ProyectoID"></param>
         /// <param name="UsuarioID"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyecto(int ProyectoID, int UsuarioID) 
+        public async Task<IEnumerable<Tecnologia>> ObtenerTecnologiasProyecto(int ProyectoID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT t.TecnologiaID, t.Nombre, t.Estado, t.UsuarioID From Tecnologia t 
+            string query = @"SELECT t.TecnologiaID, t.Nombre, t.URLIcon, t.Estado, t.UsuarioID 
+                            From Tecnologia t 
                             JOIN TecnologiaUsada tu ON t.TecnologiaID = tu.TecnologiaID
                             WHERE tu.ProyectoID = @ProyectoID AND t.UsuarioID = @UsuarioID AND tu.UsuarioID = @UsuarioID;";
-            
+
             var tecnologias = await connection.QueryAsync<Tecnologia>(query, new { ProyectoID, UsuarioID });
             return tecnologias;
         }
@@ -67,7 +68,8 @@ namespace Portafolio.Servicios
         {
             using var connection = new SqlConnection(connectionString);
 
-            string query = @"SELECT t.TecnologiaID, t.Nombre, t.Estado, t.UsuarioID From Tecnologia t 
+            string query = @"SELECT t.TecnologiaID, t.Nombre, t.URLIcon, t.Estado, t.UsuarioID
+							From Tecnologia t 
                             JOIN TecnologiaUsada tu ON t.TecnologiaID = tu.TecnologiaID
                             WHERE tu.ProyectoID = @ProyectoID;";
 
@@ -81,7 +83,8 @@ namespace Portafolio.Servicios
         /// <param name="ProyectoID"></param>
         /// <param name="UsuarioID"></param>
         /// <returns></returns>
-        public async Task EliminarTecnologia(int TecnologiaID,int ProyectoID, int UsuarioID) {
+        public async Task EliminarTecnologia(int TecnologiaID, int ProyectoID, int UsuarioID)
+        {
             using var connection = new SqlConnection(connectionString);
 
             var parametros = new { TecnologiaID, ProyectoID, UsuarioID };

@@ -145,10 +145,10 @@ namespace Portafolio.Controllers
         /// <param name="nombre">Nombre de la tecnología a verificar.</param>
         /// <returns>Un valor booleano en formato JSON que indica si la tecnología ya existe.</returns>
         [HttpGet]
-        public async Task<IActionResult> VerificarExistenciaTecnologia(string nombre)
+        public async Task<IActionResult> VerificarExistenciaTecnologia(string Nombre, int TecnologiaID)
         {
             var UsuarioID = servicioUsuario.ObtenerUsuarioId();
-            var yaExisteTecnologia = await repositorioTecnologia.ExisteTecnologia(nombre, UsuarioID);
+            var yaExisteTecnologia = await repositorioTecnologia.ExisteTecnologia(Nombre, TecnologiaID, UsuarioID);
 
             if (yaExisteTecnologia)
             {

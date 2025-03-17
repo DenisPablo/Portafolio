@@ -12,12 +12,14 @@ namespace Portafolio.Models
 
         [Required]
         [StringLength(20, MinimumLength = 3, ErrorMessage = "El {0} debe tener como minimo {2} y maximo {1} caracteres")]
-        [Remote(action: "VerificarExistenciaTecnologia", controller:"Tecnologia")]
+        [Remote(action: "VerificarExistenciaTecnologia", controller: "Tecnologia", AdditionalFields = "TecnologiaID")]
         public string Nombre { get; set; }
+
+        public string URLIcon { get; set; }
 
         [Required]
         public bool Estado { get; set; }
-        
+
         /// <summary>
         /// Cada tecnologia le pertence a un usuario y solo el puede modificar y eliminar la misma. 
         /// </summary>

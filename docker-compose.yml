@@ -1,10 +1,10 @@
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: sqlserver-container
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong!Password # Cambia esta contraseña por una segura
+      - SA_PASSWORD=Drako&&Mia#2024 # Cambia esta contraseña por una segura
     ports:
       - "1433:1433"  # Puerto de SQL Server
     volumes:
