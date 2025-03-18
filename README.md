@@ -26,7 +26,7 @@ docker build -t portafolio .
 ```
 
 ```bash
-# Desplegar el contenedor de la aplicacion
+# Ingresar los datos en docker-compose y desplegar el contenedor de la aplicacion
 
 docker-compose up -d
 ```
