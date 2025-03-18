@@ -7,7 +7,7 @@ Este proyecto permite publicar y administrar proyectos personales, permitiendo a
 Para desplegar el proyecto:
 
 ```Bash
-# Ingresar a BD y editar el docker-compose e ingresar la nueva contraseña y desplegar
+# Ingresar a BD editar el docker-compose e ingresar la nueva contraseña y desplegar
 
 docker-compose up -d
 ```
