@@ -65,6 +65,8 @@ CREATE TABLE Portafolio.dbo.Proyecto (
 	Estado bit NOT NULL,
 	FechaPubli date NULL,
 	CategoriaID int NULL,
+	UrlGitHub varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	UrlDesplegado varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	CONSTRAINT PK__Proyecto__CF241D45FD25CBE1 PRIMARY KEY (ProyectoID),
 	CONSTRAINT UC_Titulo UNIQUE (Titulo),
 	CONSTRAINT FK_Proyecto_Categoria FOREIGN KEY (CategoriaID) REFERENCES Portafolio.dbo.Categoria(CategoriaID),
