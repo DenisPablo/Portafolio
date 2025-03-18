@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace Portafolio.Servicios
 {
 
-   public interface IRepositorioImagenProyecto
+    public interface IRepositorioImagenProyecto
     {
         Task<int> Crear(ImagenProyecto imagenProyecto);
         Task EliminarImagenProyecto(string PublicID, int UsuarioID);
@@ -16,8 +16,9 @@ namespace Portafolio.Servicios
     public class RepositorioImagenProyecto : IRepositorioImagenProyecto
     {
         private readonly string connectionString;
-        public RepositorioImagenProyecto(IConfiguration configuration) {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+        public RepositorioImagenProyecto(IDbConnection dbConnection)
+        {
+            connectionString = dbConnection.GetConnectionString();
         }
         /// <summary>
         /// Guarda la URL de una imagen en la base de datos
@@ -40,7 +41,7 @@ namespace Portafolio.Servicios
         /// <param name="ProyectoID"></param>
         /// <param name="UsuarioID"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ImagenProyecto>> ObtenerImagenesProyecto(int ProyectoID, int UsuarioID) 
+        public async Task<IEnumerable<ImagenProyecto>> ObtenerImagenesProyecto(int ProyectoID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
             string query = @"SELECT ProyectoID, URL, PublicID
@@ -56,7 +57,7 @@ namespace Portafolio.Servicios
         /// <param name="PublicID"></param>
         /// <param name="UsuarioID"></param>
         /// <returns></returns>
-        public async Task EliminarImagenProyecto(string PublicID, int UsuarioID) 
+        public async Task EliminarImagenProyecto(string PublicID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 

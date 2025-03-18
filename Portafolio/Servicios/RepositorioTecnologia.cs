@@ -20,9 +20,9 @@ namespace Portafolio.Servicios
     {
 
         private readonly string connectionString;
-        public RepositorioTecnologia(IConfiguration configuration)
+        public RepositorioTecnologia(IDbConnection dbConnection)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            connectionString = dbConnection.GetConnectionString();
         }
 
         /// <summary>

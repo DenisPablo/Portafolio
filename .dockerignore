@@ -1,0 +1,34 @@
+# Carpetas de compilación que no deben incluirse en la imagen
+bin/
+obj/
+BD/
+
+# Configuración de usuario y entornos locales
+*.user
+*.vs
+.vscode/
+
+# Archivos de dependencias de NuGet
+**/packages/
+.nuget/
+
+# Archivos de logs y depuración
+logs/
+*.log
+*.nlog
+*.serilog
+*.seq
+*.trace
+
+# Archivos de publicación local
+.publish/
+
+# Archivos de Git
+.git/
+.gitignore
+
+# Archivos específicos de IDEs
+.idea/
+*.suo
+*.vscode/
+README.md

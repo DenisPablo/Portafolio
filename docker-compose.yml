@@ -1,0 +1,20 @@
+services:
+  portafolio:
+    image: portafolio
+    container_name: portafolio
+    build: .
+    networks:
+      - portafolio-net
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_SERVER=sqlserver  # Nombre del contenedor de la base de datos (asegúrate de que coincide con el nombre del contenedor o servicio de tu base de datos)
+      - DB_NAME=Portafolio
+      - DB_USER=sa
+      - DB_PASSWORD=Drako&&Mia#2024
+
+networks:
+  portafolio-net:
+    external: true  # Conectando el contenedor a la red externa llamada "portafolio-net"
+
+

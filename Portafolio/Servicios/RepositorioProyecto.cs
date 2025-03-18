@@ -24,10 +24,11 @@ namespace Portafolio.Servicios
 
         private readonly string connectionString;
 
-        public RepositorioProyecto(IConfiguration configuration)
+        public RepositorioProyecto(IDbConnection dBconnection)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            connectionString = dBconnection.GetConnectionString();
         }
+
         /// <summary>
         /// Se conecta a la base de datos y crea un nuevo Proyecto
         /// </summary>

@@ -1,8 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Portafolio.Models;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Portafolio.Servicios
 {
@@ -22,10 +20,11 @@ namespace Portafolio.Servicios
     {
         private readonly string connectionString;
 
-        public RepositorioCategoria(IConfiguration configuration)
+        public RepositorioCategoria(IDbConnection dbConnection)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            connectionString = dbConnection.GetConnectionString();
         }
+
 
         /// <summary>
         /// Se conecta con la base de datos y crea una nueva categoria.
@@ -79,7 +78,7 @@ namespace Portafolio.Servicios
         /// <param name="CategoriaID">identificador de la categoria a buscar</param>
         /// <param name="UsuarioID">identificador del propietario de la categoria</param>
         /// <returns></returns>
-        public async Task<Categoria>ObtenerCategoriasPorID(int CategoriaID ,int UsuarioID)
+        public async Task<Categoria> ObtenerCategoriasPorID(int CategoriaID, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
             string query = @"SELECT CategoriaID, Nombre, Estado 
@@ -124,7 +123,7 @@ namespace Portafolio.Servicios
         /// </summary>
         /// <param name="categoria">instancia de una categoria con la nueva informacion a cargar</param>
         /// <returns></returns>
-        public async Task EditarCategoria(Categoria categoria) 
+        public async Task EditarCategoria(Categoria categoria)
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -140,7 +139,7 @@ namespace Portafolio.Servicios
         /// <param name="nombre">Nombre de la categoria</param>
         /// <param name="UsuarioID">Identificador del Usuario</param>
         /// <returns>bool en true si encuentra coincidencias</returns>
-        public async Task<bool> ExisteCategoria(string nombre, int UsuarioID) 
+        public async Task<bool> ExisteCategoria(string nombre, int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 

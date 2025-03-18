@@ -22,13 +22,13 @@ namespace Portafolio.Servicios
 
         private readonly string connectionString;
 
-        public RepositorioUsuario(IConfiguration configuration) {
-
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+        public RepositorioUsuario(IDbConnection dbConnection)
+        {
+            connectionString = dbConnection.GetConnectionString();
         }
 
 
-        public async Task<int> CrearUsuario(Usuario usuario) 
+        public async Task<int> CrearUsuario(Usuario usuario)
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -40,10 +40,10 @@ namespace Portafolio.Servicios
             await connection.ExecuteAsync("CrearUsuario", parametros, commandType: CommandType.StoredProcedure);
             var id = parametros.Get<int>("@UsuarioID");
 
-            return id; 
+            return id;
         }
 
-        public async Task<Usuario> BuscarUsuarioPorEmail(string EmailNormalizado) 
+        public async Task<Usuario> BuscarUsuarioPorEmail(string EmailNormalizado)
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -55,7 +55,7 @@ namespace Portafolio.Servicios
             return usuario;
         }
 
-        public async Task EditarDescripcion(DescripcionUsuario descripcionUsuario) 
+        public async Task EditarDescripcion(DescripcionUsuario descripcionUsuario)
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -66,7 +66,7 @@ namespace Portafolio.Servicios
             await connection.ExecuteAsync(query, descripcionUsuario);
         }
 
-        public async Task<DescripcionUsuario> ObtenerDescripcion(int UsuarioID) 
+        public async Task<DescripcionUsuario> ObtenerDescripcion(int UsuarioID)
         {
             using var connection = new SqlConnection(connectionString);
 

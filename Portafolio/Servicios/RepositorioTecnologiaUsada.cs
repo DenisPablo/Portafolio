@@ -18,9 +18,9 @@ namespace Portafolio.Servicios
     {
         private readonly string connectionString;
 
-        public RepositorioTecnologiaUsada(IConfiguration configuration)
+        public RepositorioTecnologiaUsada(IDbConnection dbConnection)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            connectionString = dbConnection.GetConnectionString();
         }
         /// <summary>
         /// Crea una asociacion entre un proyecto y una tecnologia en la base de datos.
