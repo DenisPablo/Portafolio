@@ -1,11 +1,17 @@
 ﻿@model List<ProyectoViewModel>
 
 
+
 <div class="container">
     <div class="row">
+
+        <div class="col-12">
+            <input type="text" id="buscador" class="form-control" placeholder="Buscar proyectos..." onkeyup="filtrarProyectos()">
+        </div>
+
         @foreach (var proyecto in Model)
         {
-            <div class="col-12 col-md-3 mt-3">
+            <div class="col-12 col-md-4 mt-3 proyecto-item" data-titulo="@proyecto.Titulo.ToLower()" >
                 <!-- Control de tamaño en diferentes pantallas -->
                 <div class="card bg-dark text-white mt-3">
                     <div class="card-title text-center mt-2">
@@ -53,3 +59,6 @@
     <link rel="stylesheet" href="~/css/Proyectos.css" asp-append-version="true" />
 }
 
+@section Scripts {
+    <script src="~/js/Buscador.js"></script>
+}

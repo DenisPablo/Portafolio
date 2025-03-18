@@ -53,10 +53,10 @@
             }
         </div>
 
-        <div class="card-footer bg-dark">
+        <div class="card-footer bg-dark d-flex justify-content-center flex-wrap">
             @foreach (var tecnologia in Model.Tecnologias)
             {
-                <img src="@tecnologia.URLIcon" alt="@(tecnologia.Nombre) Logo" width="50">
+                <img src="@tecnologia.URLIcon" alt="@(tecnologia.Nombre) Logo" width="50" class="m-2">
             }
         </div>
     </div>
